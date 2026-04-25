@@ -213,9 +213,8 @@
   .form-row { display: flex; align-items: center; justify-content: space-between; padding: 13px 16px; border-bottom: 0.5px solid var(--border); }
   .form-row:last-child { border-bottom: none; }
   .form-row label { font-size: 14px; color: var(--text2); }
-  .form-input { background: transparent; border: none; color: var(--text); font-size: 14px; font-weight: 500; text-align: right; outline: none; width: 130px; -webkit-user-select: text; user-select: text; pointer-events: auto; }
+  .form-input { background: transparent; border: none; color: var(--text); font-size: 14px; font-weight: 500; text-align: right; outline: none; width: 130px; }
   .form-input::placeholder { color: var(--text3); }
-  .form-row { touch-action: manipulation; }
   .btn-primary { background: var(--accent); color: white; border: none; border-radius: var(--radius-sm); padding: 15px; font-size: 16px; font-weight: 600; cursor: pointer; width: calc(100% - 32px); margin: 16px; transition: all 0.15s; }
   .btn-primary:active { transform: scale(0.98); opacity: 0.9; }
   .btn-secondary { background: var(--bg3); color: var(--text); border: none; border-radius: var(--radius-sm); padding: 14px; font-size: 15px; font-weight: 500; cursor: pointer; width: calc(100% - 32px); margin: 8px 16px 16px; transition: all 0.15s; }
@@ -278,33 +277,14 @@
   .toast { position: fixed; bottom: calc(20px + env(safe-area-inset-bottom,0px)); left: 50%; transform: translateX(-50%) translateY(80px); background: var(--bg4); color: var(--text); border-radius: 20px; padding: 10px 20px; font-size: 14px; z-index: 200; transition: transform 0.3s; white-space: nowrap; }
   .toast.show { transform: translateX(-50%) translateY(0); }
 
-  /* SCROLLBAR */
-  ::-webkit-scrollbar { width: 0; background: transparent; }
-
-  /* DEFAULT WEEK SUMMARY BAR */
-  .default-summary-bar { background: var(--card); border-radius: var(--radius); border: 0.5px solid var(--border); margin: 12px 16px 0; padding: 14px 16px; }
-  .default-summary-kcal { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
-  .default-summary-kcal-val { font-size: 24px; font-weight: 700; color: var(--accent2); }
-  .default-summary-kcal-goal { font-size: 13px; color: var(--text2); }
-  .default-summary-week { font-size: 11px; color: var(--text3); margin-bottom: 8px; }
-
-  /* CAMERA BUTTON */
-  .camera-btn { background: var(--bg3); border: 1.5px solid var(--border2); border-radius: var(--radius-sm); padding: 14px 16px; cursor: pointer; display: flex; align-items: center; gap: 10px; margin: 10px 16px 0; color: var(--accent2); font-size: 14px; font-weight: 500; transition: all 0.15s; }
-  .camera-btn:active { background: var(--accent-dim); border-color: var(--accent); }
-  .camera-btn svg { width: 20px; height: 20px; stroke: var(--accent2); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
-  .camera-warning { font-size: 11px; color: var(--text3); padding: 6px 16px 0; }
-  .camera-loading { text-align: center; padding: 20px; color: var(--text2); font-size: 13px; }
-
-  /* EENMALIG TOGGLE in qty modal */
-  .eenmalig-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-top: 0.5px solid var(--border); margin-top: 4px; }
-  .eenmalig-label { font-size: 14px; color: var(--text2); }
-  .eenmalig-sub { font-size: 11px; color: var(--text3); margin-top: 2px; }
-
   /* DAY CARD dual progress */
-  .day-progress-dual { height: 6px; background: var(--bg3); border-radius: 3px; margin-top: 8px; overflow: hidden; position: relative; }
-  .day-progress-goal { position: absolute; top: 0; left: 0; height: 100%; border-radius: 3px; background: var(--border2); transition: width 0.4s; }
+  .day-progress-dual { height: 6px; background: var(--bg3); border-radius: 3px; margin-top: 10px; overflow: hidden; position: relative; }
+  .day-progress-goal { position: absolute; top: 0; left: 0; height: 100%; border-radius: 3px; background: var(--border2); }
   .day-progress-eaten { position: absolute; top: 0; left: 0; height: 100%; border-radius: 3px; background: var(--accent); transition: width 0.4s; z-index: 1; }
   .day-progress-eaten.over { background: var(--red); }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 0; background: transparent; }
 
   /* PROFILE AVATAR */
   .profile-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--accent-dim); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
@@ -554,13 +534,17 @@
     <div style="width:36px"></div>
   </div>
   <div style="overflow-y:auto; flex:1; padding-bottom:32px;">
-    <div class="camera-btn" onclick="openCamera()">
-      <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
-      Foto maken van product
+    <div style="margin:12px 16px 0; background:var(--card); border-radius:var(--radius); border:0.5px solid var(--border); overflow:hidden;">
+      <div style="display:flex;align-items:center;gap:10px;padding:14px 16px;cursor:pointer;" onclick="openCamera()">
+        <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:var(--accent2);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        <div>
+          <div style="font-size:14px;font-weight:600;color:var(--accent2);">Foto van product maken</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:2px;">AI leest voedingswaarden automatisch · Controleer altijd</div>
+        </div>
+      </div>
+      <div id="camera-loading" style="display:none;padding:12px 16px;font-size:13px;color:var(--text2);border-top:0.5px solid var(--border);">📷 Analyseren via Gemini...</div>
     </div>
-    <div class="camera-warning">⚠️ AI-schatting — controleer altijd voor je opslaat</div>
-    <div id="camera-loading" class="camera-loading" style="display:none">📷 Analyseren... even geduld</div>
-    <div style="font-size:11px; color:var(--text3); padding:12px 16px 4px; text-transform:uppercase; letter-spacing:0.6px; font-weight:600;">Of handmatig invullen</div>
+    <div style="font-size:11px;color:var(--text3);padding:14px 16px 4px;text-transform:uppercase;letter-spacing:0.6px;font-weight:600;">Of handmatig invullen</div>
     <div class="form-section">
       <div class="form-row">
         <label>Naam</label>
@@ -590,6 +574,8 @@
     <button class="btn-primary" onclick="saveNewFood()">Opslaan & toevoegen</button>
   </div>
 </div>
+<!-- CAMERA INPUT (hidden) -->
+<input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none" onchange="handleCameraPhoto(event)">
 
 <!-- ========== SCREEN: DEFAULT WEEK ========== -->
 <div class="screen safe-top" id="screen-default">
@@ -664,6 +650,13 @@
         </div>
         <div class="toggle on" id="dark-toggle"></div>
       </div>
+      <div class="settings-row" onclick="syncDefaultToWeek()">
+        <div class="settings-row-left">
+          <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+          Standaard week synchroniseren
+        </div>
+        <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:var(--text3);fill:none;stroke-width:2;stroke-linecap:round"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
       <div class="settings-row" onclick="backupData()">
         <div class="settings-row-left">
           <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
@@ -680,9 +673,9 @@
       </div>
     </div>
     <div style="background:var(--bg3); border-radius:var(--radius); padding:14px 16px; margin-bottom:12px;">
-      <div style="font-size:12px; font-weight:600; color:var(--text3); letter-spacing:0.6px; text-transform:uppercase; margin-bottom:10px;">Camera AI (foto → voedingswaarden)</div>
-      <input type="password" id="api-key-input" placeholder="sk-ant-api..." style="background:var(--bg4); border:0.5px solid var(--border2); color:var(--text); font-size:13px; border-radius:var(--radius-xs); padding:10px 12px; width:100%; outline:none; -webkit-user-select:text; user-select:text;" oninput="saveApiKey()">
-      <div style="font-size:11px; color:var(--text3); margin-top:6px;">Sleutel wordt lokaal opgeslagen. Nooit gedeeld.</div>
+      <div style="font-size:12px;font-weight:600;color:var(--text3);letter-spacing:0.6px;text-transform:uppercase;margin-bottom:10px;">📷 Camera AI — Google Gemini (gratis)</div>
+      <input type="password" id="gemini-key-input" placeholder="AIza..." style="background:var(--bg4);border:0.5px solid var(--border2);color:var(--text);font-size:13px;border-radius:var(--radius-xs);padding:10px 12px;width:100%;outline:none;-webkit-user-select:text;user-select:text;" oninput="saveGeminiKey()">
+      <div style="font-size:11px;color:var(--text3);margin-top:6px;">Gratis sleutel via <b>aistudio.google.com</b> · Lokaal opgeslagen</div>
     </div>
     <button class="btn-secondary" onclick="closeSettingsSheet()" style="margin:0;">Sluiten</button>
   </div>
@@ -701,19 +694,9 @@
       <button class="qty-btn" onclick="changeQty(10)">+</button>
     </div>
     <div class="qty-preview" id="qty-preview"></div>
-    <div class="eenmalig-row">
-      <div>
-        <div class="eenmalig-label">Eenmalig toevoegen</div>
-        <div class="eenmalig-sub">Niet opslaan in vaste voedingslijst</div>
-      </div>
-      <div class="toggle" id="eenmalig-toggle" onclick="toggleEenmalig()"></div>
-    </div>
-    <button class="btn-primary" onclick="confirmQtyAdd()" style="margin:16px 0 0 0; width:100%;">Toevoegen</button>
+    <button class="btn-primary" onclick="confirmQtyAdd()" style="margin:0 0 0 0; width:100%;">Toevoegen</button>
   </div>
 </div>
-
-<!-- CAMERA INPUT (hidden) -->
-<input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none" onchange="handleCameraPhoto(event)">
 
 <script>
 const DAYS = ['Maandag','Dinsdag','Woensdag','Donderdag','Vrijdag','Zaterdag','Zondag'];
@@ -820,6 +803,7 @@ function redistributeKcal() {
   saveAll();
 }
 
+// ====== RENDER HOME ======
 function calcDefaultDayTotals(dayIdx) {
   const day = defaultWeek[dayIdx];
   if (!day || !day.meals) return { kcal:0, e:0, k:0, v:0 };
@@ -843,7 +827,6 @@ function hasDefaultWeekData() {
   });
 }
 
-// ====== RENDER HOME ======
 function renderHome() {
   const today = new Date();
   const todayIdx = today.getDay() === 0 ? 6 : today.getDay() - 1;
@@ -859,37 +842,33 @@ function renderHome() {
     const adj = (profile.redistributeAdjust && profile.redistributeAdjust[i]) || 0;
     const adjustedTarget = Math.max(100, target + adj);
     const defaultTotals = calcDefaultDayTotals(i);
-    // Goal shown: default week kcal if set, else adjustedTarget
-    const displayGoal = useDefaultGoal && defaultTotals.kcal > 0 ? defaultTotals.kcal : adjustedTarget;
-    const pct = displayGoal > 0 ? Math.round((totals.eaten.kcal / displayGoal) * 100) : 0;
-    // Grey bar = default week goal as fraction of adjustedTarget
-    const greyPct = adjustedTarget > 0 ? Math.min(100, Math.round((displayGoal / adjustedTarget) * 100)) : 100;
     const isToday = i === todayIdx;
     const dayDate = new Date(weekStart);
     dayDate.setDate(weekStart.getDate() + i);
     const macros = getMacroTargets(adjustedTarget);
 
+    // Progress bar logic
+    let progressHtml = '';
+    if (useDefaultGoal && defaultTotals.kcal > 0) {
+      // Dual bar: grey = standaard week doel, gekleurd = gegeten
+      const eatenPct = Math.min(100, adjustedTarget > 0 ? Math.round((totals.eaten.kcal / adjustedTarget) * 100) : 0);
+      const goalPct  = Math.min(100, adjustedTarget > 0 ? Math.round((defaultTotals.kcal / adjustedTarget) * 100) : 0);
+      const isOver   = eatenPct > 110;
+      progressHtml = `<div class="day-progress-dual">
+        <div class="day-progress-goal" style="width:${goalPct}%"></div>
+        <div class="day-progress-eaten${isOver?' over':''}" style="width:${eatenPct}%"></div>
+      </div>
+      <div style="font-size:10px;color:var(--text3);margin-top:4px;">Std.doel: ${defaultTotals.kcal} kcal</div>`;
+    } else {
+      const pct = adjustedTarget > 0 ? Math.round((totals.eaten.kcal / adjustedTarget) * 100) : 0;
+      progressHtml = `<div class="day-progress">
+        <div class="day-progress-bar ${pct > 110 ? 'over' : ''}" style="width:${Math.min(pct,100)}%"></div>
+      </div>`;
+    }
+
     const card = document.createElement('div');
     card.className = 'day-card' + (isToday ? ' today' : '');
     card.onclick = () => openDay(i);
-
-    let progressHtml = '';
-    if (useDefaultGoal && defaultTotals.kcal > 0) {
-      // Dual bar: grey = default goal, colored = eaten
-      const eatenPct = Math.min(100, Math.round((totals.eaten.kcal / adjustedTarget) * 100));
-      const goalPct = Math.min(100, Math.round((defaultTotals.kcal / adjustedTarget) * 100));
-      progressHtml = `<div class="day-progress-dual">
-        <div class="day-progress-goal" style="width:${goalPct}%"></div>
-        <div class="day-progress-eaten ${pct > 110 ? 'over' : ''}" style="width:${eatenPct}%"></div>
-      </div>`;
-    } else {
-      progressHtml = `<div class="day-progress"><div class="day-progress-bar ${pct > 110 ? 'over' : ''}" style="width:${Math.min(pct,100)}%"></div></div>`;
-    }
-
-    let goalLabel = useDefaultGoal && defaultTotals.kcal > 0
-      ? `<div style="font-size:10px;color:var(--text3)">Std: ${defaultTotals.kcal} · Huidig: ${Math.round(adjustedTarget)}</div>`
-      : '';
-
     card.innerHTML = `
       <div class="day-header">
         <div>
@@ -907,10 +886,9 @@ function renderHome() {
         <div class="macro-pill"><div class="macro-dot v"></div><span>${macros.fat}g V</span></div>
       </div>
       ${progressHtml}
-      ${goalLabel}
       <div style="display:flex; justify-content:space-between; margin-top:6px;">
         <span class="eaten-badge">${totals.eaten.kcal} kcal gegeten</span>
-        <span class="eaten-badge"><span class="eaten-pct">${pct}%</span> van doel</span>
+        <span class="eaten-badge"><span class="eaten-pct" style="${Math.round(totals.eaten.kcal/adjustedTarget*100)>110?'color:var(--red)':''}">${adjustedTarget>0?Math.round(totals.eaten.kcal/adjustedTarget*100):0}%</span> van doel</span>
       </div>`;
     grid.appendChild(card);
   });
@@ -1092,82 +1070,11 @@ function deleteFoodFromDb(idx) {
   showToast('Verwijderd uit lijst');
 }
 
-// ====== EENMALIG TOGGLE ======
-let qtyEenmalig = false;
-function toggleEenmalig() {
-  qtyEenmalig = !qtyEenmalig;
-  document.getElementById('eenmalig-toggle').className = 'toggle' + (qtyEenmalig ? ' on' : '');
-}
-
-// ====== CAMERA / AI ======
-function openCamera() {
-  document.getElementById('camera-input').click();
-}
-
-function saveApiKey() {
-  const key = document.getElementById('api-key-input').value;
-  profile.apiKey = key;
-  saveAll();
-}
-
-async function handleCameraPhoto(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const apiKey = profile.apiKey || '';
-  if (!apiKey) { showToast('Voeg eerst een API-sleutel in via Instellingen'); return; }
-
-  const loading = document.getElementById('camera-loading');
-  loading.style.display = 'block';
-  showScreen('screen-add-food');
-
-  const reader = new FileReader();
-  reader.onload = async (e) => {
-    const base64 = e.target.result.split(',')[1];
-    const mediaType = file.type || 'image/jpeg';
-    try {
-      const resp = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
-        body: JSON.stringify({
-          model: 'claude-opus-4-5',
-          max_tokens: 500,
-          messages: [{
-            role: 'user',
-            content: [
-              { type: 'image', source: { type: 'base64', media_type: mediaType, data: base64 } },
-              { type: 'text', text: 'Dit is een foto van een voedingsproduct of voedingslabel. Geef de voedingswaarden PER 100g terug als JSON (alleen JSON, geen uitleg): {"naam":"...","kcal":0,"eiwit":0,"koolhydraten":0,"vetten":0}. Gebruik het voedingslabel als dat zichtbaar is. Schat redelijk als het label niet volledig leesbaar is.' }
-            ]
-          }]
-        })
-      });
-      const data = await resp.json();
-      const text = (data.content||[]).map(b => b.text||'').join('');
-      const clean = text.replace(/```json|```/g,'').trim();
-      const parsed = JSON.parse(clean);
-      document.getElementById('af-name').value = parsed.naam || '';
-      document.getElementById('af-kcal').value = parsed.kcal || '';
-      document.getElementById('af-e').value = parsed.eiwit || '';
-      document.getElementById('af-k').value = parsed.koolhydraten || '';
-      document.getElementById('af-v').value = parsed.vetten || '';
-      document.getElementById('af-per').value = 100;
-      showToast('Voedingswaarden ingevuld — controleer voor opslaan!');
-    } catch(err) {
-      showToast('Analyse mislukt. Handmatig invullen.');
-    } finally {
-      loading.style.display = 'none';
-      event.target.value = '';
-    }
-  };
-  reader.readAsDataURL(file);
-}
-
 // ====== QTY MODAL ======
 function openQtyModal(foodIdx) {
   selectedFood = { ...currentFoodDb[foodIdx], dbIdx: foodIdx };
   document.getElementById('qty-food-name').textContent = selectedFood.name;
   document.getElementById('qty-input').value = 100;
-  qtyEenmalig = false;
-  document.getElementById('eenmalig-toggle').className = 'toggle';
   updateQtyPreview();
   document.getElementById('qty-modal').style.display = 'flex';
 }
@@ -1199,16 +1106,13 @@ function confirmQtyAdd() {
   const foodEntry = { ...selectedFood, qty, checked: false };
   delete foodEntry.dbIdx;
 
-  // Eenmalig: mark as one-time, don't persist to DB
-  if (qtyEenmalig) foodEntry._eenmalig = true;
-
   if (foodListContext === 'day') {
     weekData[currentWeekKey].days[currentDayIdx].meals[currentMealIdx].foods.push(foodEntry);
     saveAll();
     document.getElementById('qty-modal').style.display = 'none';
     renderDayContent();
     renderHome();
-    showToast(`${selectedFood.name} toegevoegd${qtyEenmalig ? ' (eenmalig)' : ''}`);
+    showToast(`${selectedFood.name} toegevoegd`);
   } else if (foodListContext === 'default') {
     if (!defaultWeek[defaultDayIdx]) defaultWeek[defaultDayIdx] = { meals: MEAL_NAMES_DEFAULT.map(m=>({name:m,foods:[]})) };
     defaultWeek[defaultDayIdx].meals[currentMealIdx].foods.push(foodEntry);
@@ -1392,30 +1296,31 @@ function switchDefaultDay(i) {
 function renderDefaultDayContent(idx) {
   if (!defaultWeek[idx]) defaultWeek[idx] = { meals: MEAL_NAMES_DEFAULT.map(m=>({name:m,foods:[]})) };
   const day = defaultWeek[idx];
+
+  // Totals for this day
+  const dt = calcDefaultDayTotals(idx);
   const dayTarget = getDayTarget(idx);
   const adj = (profile.redistributeAdjust && profile.redistributeAdjust[idx]) || 0;
   const adjustedTarget = Math.max(100, dayTarget + adj);
   const macros = getMacroTargets(adjustedTarget);
 
-  // Calculate totals for this default day
-  const dt = calcDefaultDayTotals(idx);
-  const ePct = macros.protein > 0 ? Math.min(100, Math.round((dt.e/macros.protein)*100)) : 0;
-  const kPct = macros.carb > 0 ? Math.min(100, Math.round((dt.k/macros.carb)*100)) : 0;
-  const vPct = macros.fat > 0 ? Math.min(100, Math.round((dt.v/macros.fat)*100)) : 0;
-
-  // Week average line
+  // Week average (sum of all default days / 7)
   let weekTotal = 0;
   DAYS.forEach((_,i) => { weekTotal += calcDefaultDayTotals(i).kcal; });
   const weekAvg = Math.round(weekTotal / 7);
 
-  let html = `<div class="default-summary-bar">
-    <div class="default-summary-kcal">
+  const ePct = macros.protein > 0 ? Math.min(100, Math.round((dt.e / macros.protein) * 100)) : 0;
+  const kPct = macros.carb   > 0 ? Math.min(100, Math.round((dt.k / macros.carb)    * 100)) : 0;
+  const vPct = macros.fat    > 0 ? Math.min(100, Math.round((dt.v / macros.fat)     * 100)) : 0;
+
+  let html = `<div class="day-summary-bar" style="margin:12px 16px;">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;">
       <div>
-        <div class="default-summary-kcal-val">${dt.kcal} <span style="font-size:14px;color:var(--text2)">/ ${Math.round(adjustedTarget)}</span></div>
+        <div style="font-size:26px;font-weight:700;color:var(--accent2);">${dt.kcal} <span style="font-size:15px;color:var(--text2);">/ ${Math.round(adjustedTarget)}</span></div>
         <div style="font-size:12px;color:var(--text2);margin-top:2px;">kcal gepland van doel</div>
       </div>
-      <div style="text-align:right;font-size:12px;color:var(--text3)">
-        Weekgemiddelde<br><span style="color:var(--accent2);font-weight:600;font-size:14px;">${weekAvg}</span> kcal/dag
+      <div style="text-align:right;font-size:12px;color:var(--text3);">
+        Weekgemiddelde<br><span style="color:var(--accent2);font-weight:600;font-size:15px;">${weekAvg}</span> kcal/dag
       </div>
     </div>
     <div class="macro-bars">
@@ -1437,8 +1342,16 @@ function renderDefaultDayContent(idx) {
     </div>
   </div>`;
 
-  day.meals.forEach((meal,mi) => {
-    const mealKcal = (meal.foods||[]).reduce((s,f) => s + Math.round((f.kcal||0)*(f.qty||100)/100), 0);
+  day.meals.forEach((meal, mi) => {
+    const mealTotals = (meal.foods||[]).reduce((acc, f) => {
+      const fac = (f.qty||100) / 100;
+      acc.kcal += Math.round((f.kcal||0)*fac);
+      acc.e    += Math.round((f.e||0)*fac*10)/10;
+      acc.k    += Math.round((f.k||0)*fac*10)/10;
+      acc.v    += Math.round((f.v||0)*fac*10)/10;
+      return acc;
+    }, {kcal:0, e:0, k:0, v:0});
+
     html += `<div class="meal-section">
       <div class="meal-header">
         <div class="meal-title-area">
@@ -1446,19 +1359,24 @@ function renderDefaultDayContent(idx) {
           <input class="meal-title-input" value="${meal.name}" onchange="renameDefaultMeal(${idx},${mi},this.value)">
         </div>
         <div style="display:flex;align-items:center;gap:10px;">
-          <span class="meal-kcal-badge">${mealKcal} kcal</span>
           <button class="meal-add-btn" onclick="openDefaultFoodSearch(${idx},${mi})">+</button>
         </div>
+      </div>
+      <div style="padding:6px 16px 10px; display:flex; gap:10px; flex-wrap:wrap;">
+        <span style="font-size:12px;font-weight:600;color:var(--accent2);">${mealTotals.kcal} kcal</span>
+        <span class="macro-pill"><div class="macro-dot e"></div><span style="font-size:12px;color:var(--text2);">E ${mealTotals.e}g</span></span>
+        <span class="macro-pill"><div class="macro-dot k"></div><span style="font-size:12px;color:var(--text2);">K ${mealTotals.k}g</span></span>
+        <span class="macro-pill"><div class="macro-dot v"></div><span style="font-size:12px;color:var(--text2);">V ${mealTotals.v}g</span></span>
       </div>`;
     if (!meal.foods || meal.foods.length === 0) {
       html += `<div style="padding:12px 16px; font-size:13px; color:var(--text3)">Nog geen voeding</div>`;
     } else {
-      meal.foods.forEach((f,fi) => {
-        const fac = (f.qty||100)/100;
+      meal.foods.forEach((f, fi) => {
+        const fac = (f.qty||100) / 100;
         const fkcal = Math.round((f.kcal||0)*fac);
-        const fe = Math.round((f.e||0)*fac*10)/10;
-        const fk = Math.round((f.k||0)*fac*10)/10;
-        const fv = Math.round((f.v||0)*fac*10)/10;
+        const fe    = Math.round((f.e||0)*fac*10)/10;
+        const fk    = Math.round((f.k||0)*fac*10)/10;
+        const fv    = Math.round((f.v||0)*fac*10)/10;
         html += `<div class="food-item">
           <div class="food-item-info">
             <div class="food-item-name">${f.name}</div>
@@ -1471,6 +1389,7 @@ function renderDefaultDayContent(idx) {
     }
     html += `</div>`;
   });
+
   document.getElementById('default-day-content').innerHTML = html;
 }
 
@@ -1498,7 +1417,7 @@ function openDefaultFoodSearch(dayIdx, mealIdx) {
 // ====== ARCHIVE ======
 function checkArchive() {
   const today = new Date();
-  if (today.getDay() === 0) { // Sunday
+  if (today.getDay() === 1) { // Maandag: archiveer de voorbije week (ma t/m zo)
     const lastWeekKey = getWeekKey(new Date(today.getTime() - 7 * 86400000));
     if (weekData[lastWeekKey] && !archiveData.find(a => a.weekKey === lastWeekKey)) {
       archiveWeek(lastWeekKey);
@@ -1595,13 +1514,102 @@ function openArchiveDetail(idx) {
 // ====== SETTINGS ======
 function openSettingsSheet() {
   document.getElementById('settings-sheet').style.display = 'flex';
-  const inp = document.getElementById('api-key-input');
-  if (inp) inp.value = profile.apiKey || '';
+  const inp = document.getElementById('gemini-key-input');
+  if (inp) inp.value = profile.geminiKey || '';
 }
 function closeSettingsSheet(e) {
   if (!e || e.target.id === 'settings-sheet') {
     document.getElementById('settings-sheet').style.display = 'none';
   }
+}
+
+// ====== GEMINI CAMERA AI ======
+function saveGeminiKey() {
+  profile.geminiKey = document.getElementById('gemini-key-input').value;
+  saveAll();
+}
+
+function openCamera() {
+  document.getElementById('camera-input').click();
+}
+
+async function handleCameraPhoto(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const apiKey = profile.geminiKey || '';
+  if (!apiKey) { showToast('Voeg eerst een Gemini sleutel in via Instellingen'); return; }
+  const loading = document.getElementById('camera-loading');
+  if (loading) loading.style.display = 'block';
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    const base64 = e.target.result.split(',')[1];
+    const mimeType = file.type || 'image/jpeg';
+    try {
+      const resp = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [
+              { inline_data: { mime_type: mimeType, data: base64 } },
+              { text: 'Dit is een foto van een voedingsproduct of voedingslabel. Geef de voedingswaarden PER 100g terug als puur JSON zonder markdown of uitleg: {"naam":"...","kcal":0,"eiwit":0,"koolhydraten":0,"vetten":0}. Gebruik het voedingslabel als zichtbaar. Schat als het label niet volledig leesbaar is.' }
+            ]}],
+            generationConfig: { temperature: 0.1, maxOutputTokens: 300 }
+          })
+        }
+      );
+      const data = await resp.json();
+      const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+      const clean = text.replace(/```json|```/g,'').trim();
+      const parsed = JSON.parse(clean);
+      document.getElementById('af-name').value = parsed.naam         || '';
+      document.getElementById('af-kcal').value = parsed.kcal         || '';
+      document.getElementById('af-e').value    = parsed.eiwit        || '';
+      document.getElementById('af-k').value    = parsed.koolhydraten || '';
+      document.getElementById('af-v').value    = parsed.vetten       || '';
+      document.getElementById('af-per').value  = 100;
+      showToast('Ingevuld door Gemini — controleer voor opslaan!');
+    } catch(err) {
+      showToast('Analyse mislukt — handmatig invullen.');
+    } finally {
+      if (loading) loading.style.display = 'none';
+      event.target.value = '';
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+// ====== SYNC STANDAARD WEEK → HUIDIGE WEEK ======
+function syncDefaultToWeek() {
+  const hasData = Object.keys(defaultWeek).some(i => {
+    const d = defaultWeek[i];
+    return d && d.meals && d.meals.some(m => m.foods && m.foods.length > 0);
+  });
+  if (!hasData) { showToast('Standaard week is leeg'); closeSettingsSheet(); return; }
+  if (!weekData[currentWeekKey]) {
+    weekData[currentWeekKey] = { days: DAYS.map(() => ({
+      meals: MEAL_NAMES_DEFAULT.map(m => ({ name: m, foods: [] }))
+    }))};
+  }
+  DAYS.forEach((d, i) => {
+    if (defaultWeek[i] && defaultWeek[i].meals) {
+      const currentMeals = weekData[currentWeekKey].days[i].meals;
+      const defaultMeals = JSON.parse(JSON.stringify(defaultWeek[i].meals));
+      defaultMeals.forEach((dm, mi) => {
+        dm.foods = dm.foods.map(f => {
+          const existing = (currentMeals[mi]?.foods||[]).find(ef => ef.name === f.name && ef.qty === f.qty);
+          return { ...f, checked: existing ? (existing.checked||false) : false };
+        });
+        if (!dm.name && currentMeals[mi]) dm.name = currentMeals[mi].name;
+      });
+      weekData[currentWeekKey].days[i].meals = defaultMeals;
+    }
+  });
+  saveAll();
+  renderHome();
+  closeSettingsSheet();
+  showToast('Standaard week gesynchroniseerd ✓');
 }
 
 function toggleDarkMode() {
