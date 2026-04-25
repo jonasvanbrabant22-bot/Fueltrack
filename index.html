@@ -638,6 +638,13 @@
         </div>
         <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:var(--text3);fill:none;stroke-width:2;stroke-linecap:round"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
+      <div class="settings-row" onclick="syncDefaultToWeek()" style="border-top:0.5px solid var(--border);">
+        <div class="settings-row-left">
+          <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+          Standaard week synchroniseren
+        </div>
+        <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:var(--text3);fill:none;stroke-width:2;stroke-linecap:round"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
       <div class="settings-row" onclick="document.getElementById('restore-input').click()">
         <div class="settings-row-left">
           <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
@@ -1276,12 +1283,55 @@ function openDefaultFoodSearch(dayIdx, mealIdx) {
 // ====== ARCHIVE ======
 function checkArchive() {
   const today = new Date();
-  if (today.getDay() === 0) { // Sunday
+  // Archiveer op maandag: sla de voorbije week (maandag t/m zondag) op
+  if (today.getDay() === 1) {
+    // Vorige week begon 7 dagen geleden
     const lastWeekKey = getWeekKey(new Date(today.getTime() - 7 * 86400000));
     if (weekData[lastWeekKey] && !archiveData.find(a => a.weekKey === lastWeekKey)) {
       archiveWeek(lastWeekKey);
     }
   }
+}
+
+function syncDefaultToWeek() {
+  const hasData = Object.keys(defaultWeek).some(i => {
+    const d = defaultWeek[i];
+    return d && d.meals && d.meals.some(m => m.foods && m.foods.length > 0);
+  });
+  if (!hasData) {
+    showToast('Standaard week is leeg — voeg eerst voeding toe');
+    closeSettingsSheet();
+    return;
+  }
+  if (!weekData[currentWeekKey]) {
+    weekData[currentWeekKey] = { days: DAYS.map(() => ({
+      meals: MEAL_NAMES_DEFAULT.map(m => ({ name: m, foods: [], eaten: false }))
+    }))};
+  }
+  DAYS.forEach((d, i) => {
+    if (defaultWeek[i] && defaultWeek[i].meals) {
+      // Deep copy default meals but preserve already-checked foods in current week
+      const currentMeals = weekData[currentWeekKey].days[i].meals;
+      const defaultMeals = JSON.parse(JSON.stringify(defaultWeek[i].meals));
+      defaultMeals.forEach((dm, mi) => {
+        dm.foods = dm.foods.map(f => ({ ...f, checked: false }));
+        // If current week already has this meal with checked foods, keep those checked states
+        const existing = currentMeals[mi];
+        if (existing && existing.foods) {
+          dm.foods.forEach(df => {
+            const match = existing.foods.find(ef => ef.name === df.name && ef.qty === df.qty);
+            if (match) df.checked = match.checked || false;
+          });
+        }
+        if (!dm.name && existing) dm.name = existing.name;
+      });
+      weekData[currentWeekKey].days[i].meals = defaultMeals;
+    }
+  });
+  saveAll();
+  renderHome();
+  closeSettingsSheet();
+  showToast('Standaard week gesynchroniseerd ✓');
 }
 
 function archiveWeek(weekKey) {
