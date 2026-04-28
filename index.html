@@ -277,19 +277,6 @@
   .toast { position: fixed; bottom: calc(20px + env(safe-area-inset-bottom,0px)); left: 50%; transform: translateX(-50%) translateY(80px); background: var(--bg4); color: var(--text); border-radius: 20px; padding: 10px 20px; font-size: 14px; z-index: 200; transition: transform 0.3s; white-space: nowrap; }
   .toast.show { transform: translateX(-50%) translateY(0); }
 
-  /* DAY CARD dual progress */
-  .day-progress-dual { height: 6px; background: var(--bg3); border-radius: 3px; margin-top: 10px; overflow: hidden; position: relative; }
-  .day-progress-goal { position: absolute; top: 0; left: 0; height: 100%; border-radius: 3px; background: var(--border2); }
-  .day-progress-eaten { position: absolute; top: 0; left: 0; height: 100%; border-radius: 3px; background: var(--accent); transition: width 0.4s; z-index: 1; }
-  .day-progress-eaten.over { background: var(--red); }
-
-  /* SCANLINE ANIMATION */
-  @keyframes scanline {
-    0%   { top: 10%; }
-    50%  { top: 85%; }
-    100% { top: 10%; }
-  }
-
   /* SCROLLBAR */
   ::-webkit-scrollbar { width: 0; background: transparent; }
 
@@ -527,7 +514,7 @@
   </div>
   <div style="overflow-y:auto; flex:1; padding-bottom:32px;">
     <div class="food-list" id="food-search-list"></div>
-    <div class="add-food-btn" onclick="addFoodReturnScreen='screen-food'; showScreen('screen-add-food')">+ Voeding toevoegen aan lijst</div>
+    <div class="add-food-btn" onclick="addFoodReturnScreen='screen-food';showScreen('screen-add-food')">+ Voeding toevoegen aan lijst</div>
   </div>
 </div>
 
@@ -541,26 +528,23 @@
     <div style="width:36px"></div>
   </div>
   <div style="overflow-y:auto; flex:1; padding-bottom:32px;">
-    <!-- BARCODE SCANNER KNOP -->
-    <div style="margin:12px 16px 0; background:var(--card); border-radius:var(--radius); border:0.5px solid var(--border); overflow:hidden;">
+    <div style="margin:12px 16px 0;background:var(--card);border-radius:var(--radius);border:.5px solid var(--border);overflow:hidden;">
       <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;" onclick="openBarcodeScanner()">
         <div style="width:36px;height:36px;background:var(--accent-dim);border-radius:var(--radius-xs);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
           <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:var(--accent2);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;">
             <path d="M3 9V5a2 2 0 012-2h4M3 15v4a2 2 0 002 2h4M15 3h4a2 2 0 012 2v4M15 21h4a2 2 0 002-2v-4"/>
             <line x1="7" y1="7" x2="7" y2="17"/><line x1="10" y1="7" x2="10" y2="17"/>
             <line x1="13" y1="7" x2="13" y2="12"/><line x1="16" y1="7" x2="16" y2="17"/>
-            <line x1="19" y1="12" x2="19" y2="17"/>
           </svg>
         </div>
         <div>
           <div style="font-size:14px;font-weight:600;color:var(--accent2);">Barcode scannen</div>
-          <div style="font-size:11px;color:var(--text3);margin-top:2px;">Richt camera op EAN-barcode · Open Food Facts</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:2px;">Richt op EAN-barcode · Open Food Facts</div>
         </div>
-        <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:var(--text3);fill:none;stroke-width:2;stroke-linecap:round;margin-left:auto;"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
-      <div id="barcode-status" style="display:none;padding:10px 16px;font-size:13px;color:var(--text2);border-top:0.5px solid var(--border);"></div>
+      <div id="barcode-status" style="display:none;padding:8px 16px;font-size:13px;color:var(--text2);border-top:.5px solid var(--border);"></div>
     </div>
-    <div style="font-size:11px;color:var(--text3);padding:14px 16px 4px;text-transform:uppercase;letter-spacing:0.6px;font-weight:600;">Of handmatig invullen</div>
+    <div style="font-size:11px;color:var(--text3);padding:14px 16px 4px;text-transform:uppercase;letter-spacing:.6px;font-weight:600;">Of handmatig invullen</div>
     <div class="form-section">
       <div class="form-row">
         <label>Naam</label>
@@ -599,41 +583,28 @@
 </div>
 
 <!-- ========== SCREEN: BARCODE SCANNER ========== -->
-<div class="screen safe-top" id="screen-barcode" style="background:#000;">
-  <div class="topbar" style="background:rgba(0,0,0,0.7);border-bottom:none;position:absolute;top:0;left:0;right:0;z-index:20;">
-    <button class="btn-icon" style="background:rgba(255,255,255,0.15);" onclick="closeScanner()">
+<div class="screen safe-top" id="screen-barcode" style="background:#000;overflow:hidden;">
+  <div class="topbar" style="background:rgba(0,0,0,.7);border-bottom:none;position:absolute;top:0;left:0;right:0;z-index:20;">
+    <button class="btn-icon" style="background:rgba(255,255,255,.15);" onclick="closeScanner()">
       <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
     </button>
     <span class="topbar-title" style="color:#fff;">Scan barcode</span>
     <div style="width:36px"></div>
   </div>
-  <!-- Camera viewfinder -->
-  <video id="scanner-video" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;" playsinline autoplay muted></video>
-  <!-- Overlay -->
-  <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;z-index:10;">
-    <div style="width:260px;height:130px;border:2.5px solid #fff;border-radius:12px;box-shadow:0 0 0 2000px rgba(0,0,0,0.55);position:relative;">
-      <!-- Corner accents -->
-      <div style="position:absolute;top:-3px;left:-3px;width:24px;height:24px;border-top:4px solid var(--accent2);border-left:4px solid var(--accent2);border-radius:4px 0 0 0;"></div>
-      <div style="position:absolute;top:-3px;right:-3px;width:24px;height:24px;border-top:4px solid var(--accent2);border-right:4px solid var(--accent2);border-radius:0 4px 0 0;"></div>
-      <div style="position:absolute;bottom:-3px;left:-3px;width:24px;height:24px;border-bottom:4px solid var(--accent2);border-left:4px solid var(--accent2);border-radius:0 0 0 4px;"></div>
-      <div style="position:absolute;bottom:-3px;right:-3px;width:24px;height:24px;border-bottom:4px solid var(--accent2);border-right:4px solid var(--accent2);border-radius:0 0 4px 0;"></div>
-      <!-- Scan line animation -->
-      <div id="scan-line" style="position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent2),transparent);animation:scanline 2s ease-in-out infinite;top:50%;"></div>
-    </div>
-    <div style="color:#fff;font-size:14px;margin-top:20px;font-weight:500;opacity:0.9;">Richt op de barcode van het product</div>
-    <div id="scanner-feedback" style="color:var(--accent2);font-size:13px;margin-top:8px;font-weight:600;min-height:20px;"></div>
+  <div id="scanner-region" style="width:100%;height:100%;"></div>
+  <div style="position:absolute;bottom:60px;left:0;right:0;text-align:center;z-index:20;pointer-events:none;">
+    <div id="scanner-feedback" style="color:var(--accent2);font-size:14px;font-weight:600;background:rgba(0,0,0,.6);display:inline-block;padding:8px 18px;border-radius:20px;"></div>
   </div>
-  <canvas id="scanner-canvas" style="display:none;"></canvas>
 </div>
 
 <!-- PORTIE MODAL voor gescand product -->
 <div class="modal-overlay" id="portion-modal" style="display:none" onclick="closePortionModal(event)">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
-    <div class="modal-title" id="portion-product-name" style="font-size:16px;"></div>
-    <div id="portion-product-brand" style="font-size:13px;color:var(--text2);margin-bottom:16px;"></div>
-    <div id="portion-options" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;"></div>
-    <div style="font-size:12px;color:var(--text3);margin-bottom:16px;" id="portion-per100-info"></div>
+    <div class="modal-title" id="portion-product-name" style="font-size:16px;margin-bottom:4px;"></div>
+    <div id="portion-product-brand" style="font-size:13px;color:var(--text2);margin-bottom:14px;"></div>
+    <div id="portion-options" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;"></div>
+    <div style="font-size:12px;color:var(--text3);margin-bottom:14px;" id="portion-per100-info"></div>
     <button class="btn-primary" onclick="confirmScannedFood()" style="width:100%;margin:0;">Toevoegen aan lijst</button>
     <button class="btn-secondary" onclick="closePortionModal()" style="width:100%;margin:8px 0 0 0;">Annuleren</button>
   </div>
@@ -704,7 +675,7 @@
   <div class="modal-sheet">
     <div class="modal-handle"></div>
     <div class="modal-title">Instellingen</div>
-    <div style="background:var(--bg3); border-radius:var(--radius); overflow:hidden; margin-bottom:12px;">
+    <div style="background:var(--bg3);border-radius:var(--radius);overflow:hidden;margin-bottom:12px;">
       <div class="settings-row" onclick="toggleDarkMode()" style="border-top:none;">
         <div class="settings-row-left">
           <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
@@ -744,27 +715,25 @@
     <div class="modal-handle"></div>
     <div class="modal-title">Portie toevoegen</div>
     <div class="modal-food-name" id="qty-food-name"></div>
-
-    <!-- Stuk-modus: aantal stuks + aanpasbaar gewicht per stuk -->
+    <!-- Stuk-modus -->
     <div id="qty-piece-section" style="display:none;">
-      <div style="font-size:12px;color:var(--text3);margin-bottom:8px;">Aantal stuks</div>
+      <div style="font-size:12px;color:var(--text3);margin-bottom:6px;">Aantal stuks</div>
       <div class="qty-row">
         <button class="qty-btn" onclick="changeQty(-1)">−</button>
         <input class="qty-input" id="qty-input" type="number" value="1" oninput="updateQtyPreview()">
         <span class="qty-unit">stuks</span>
         <button class="qty-btn" onclick="changeQty(1)">+</button>
       </div>
-      <div style="font-size:12px;color:var(--text3);margin:12px 0 6px;">Gewicht per stuk (g) — aanpasbaar</div>
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
-        <button class="qty-btn" onclick="changePieceWeight(-5)" style="width:36px;height:36px;font-size:16px;">−</button>
+      <div style="font-size:12px;color:var(--text3);margin:10px 0 4px;">Gewicht per stuk (g)</div>
+      <div class="qty-row">
+        <button class="qty-btn" onclick="changePieceWeight(-5)" style="width:36px;height:36px;">−</button>
         <input class="qty-input" id="qty-piece-weight" type="number" style="font-size:18px;" oninput="updateQtyPreview()">
         <span class="qty-unit">g/stuk</span>
-        <button class="qty-btn" onclick="changePieceWeight(5)" style="width:36px;height:36px;font-size:16px;">+</button>
+        <button class="qty-btn" onclick="changePieceWeight(5)" style="width:36px;height:36px;">+</button>
       </div>
-      <div style="font-size:11px;color:var(--text3);margin-bottom:12px;" id="qty-piece-hint"></div>
+      <div style="font-size:11px;color:var(--text3);margin-bottom:8px;" id="qty-piece-hint"></div>
     </div>
-
-    <!-- Gram-modus: gewoon gram -->
+    <!-- Gram-modus -->
     <div id="qty-gram-section">
       <div class="qty-row">
         <button class="qty-btn" onclick="changeQty(-10)">−</button>
@@ -773,15 +742,13 @@
         <button class="qty-btn" onclick="changeQty(10)">+</button>
       </div>
     </div>
-
-    <!-- Wissel tussen stuk en gram (altijd zichtbaar) -->
+    <!-- Wissel knop (alleen voor stuk-producten) -->
     <div id="qty-switch-row" style="display:none;margin:10px 0;">
       <div style="display:flex;gap:8px;">
-        <button id="qty-mode-piece-btn" onclick="setQtyMode('piece')" style="flex:1;padding:8px;border-radius:var(--radius-xs);border:1.5px solid var(--accent);background:var(--accent-dim);color:var(--accent2);font-size:13px;font-weight:600;cursor:pointer;">Per stuk</button>
-        <button id="qty-mode-gram-btn"  onclick="setQtyMode('gram')"  style="flex:1;padding:8px;border-radius:var(--radius-xs);border:1.5px solid var(--border);background:var(--bg3);color:var(--text2);font-size:13px;font-weight:500;cursor:pointer;">Per gram</button>
+        <button id="qty-mode-piece-btn" onclick="setQtyMode('piece')">Per stuk</button>
+        <button id="qty-mode-gram-btn"  onclick="setQtyMode('gram')">Per gram</button>
       </div>
     </div>
-
     <div class="qty-preview" id="qty-preview"></div>
     <button class="btn-primary" onclick="confirmQtyAdd()" style="margin:0; width:100%;">Toevoegen</button>
   </div>
@@ -832,6 +799,9 @@ function initCurrentWeek() {
   }
 }
 
+function r1d(n) { return Math.round(n * 10) / 10; }
+function ri(n)  { return Math.round(n); }
+
 function getDayTarget(dayIdx) {
   const p = profile;
   const tdee = p.tdee || 2000;
@@ -855,67 +825,58 @@ function getMacroTargets(kcal) {
   return { protein, fat, carb };
 }
 
+function calcFoodMacros(food) {
+  // qty opgeslagen in gram; isPiece-waarden zijn per pieceGrams, anders per 100g
+  const base = (food.isPiece && food.pieceGrams) ? food.pieceGrams : 100;
+  const f = (food.qty || 0) / base;
+  return {
+    kcal: ri(  (food.kcal||0) * f),
+    e:    r1d( (food.e||0)    * f),
+    k:    r1d( (food.k||0)    * f),
+    v:    r1d( (food.v||0)    * f),
+  };
+}
+
 function calcDayTotals(dayIdx) {
   const day = weekData[currentWeekKey]?.days[dayIdx];
   if (!day) return { kcal:0, e:0, k:0, v:0, eaten:{ kcal:0, e:0, k:0, v:0 } };
   let kcal=0, e=0, k=0, v=0, eK=0, eE=0, eKK=0, eV=0;
   day.meals.forEach(meal => {
-    meal.foods.forEach(food => {
-      const factor = food.qty / 100;
-      const fk = Math.round((food.kcal||0) * factor);
-      const fe = Math.round((food.e||0) * factor * 10)/10;
-      const fkk = Math.round((food.k||0) * factor * 10)/10;
-      const fv = Math.round((food.v||0) * factor * 10)/10;
-      kcal += fk; e += fe; k += fkk; v += fv;
-      if (food.checked) { eK += fk; eE += fe; eKK += fkk; eV += fv; }
+    (meal.foods||[]).forEach(food => {
+      const m = calcFoodMacros(food);
+      kcal += m.kcal; e += m.e; k += m.k; v += m.v;
+      if (food.checked) { eK += m.kcal; eE += m.e; eKK += m.k; eV += m.v; }
     });
   });
-  return { kcal, e, k, v, eaten:{ kcal:eK, e:eE, k:eKK, v:eV } };
+  return { kcal, e: r1d(e), k: r1d(k), v: r1d(v),
+           eaten:{ kcal:eK, e:r1d(eE), k:r1d(eKK), v:r1d(eV) } };
 }
 
 function redistributeKcal() {
+  // Wis aanpassingen eerst zodat getDayTarget niet circulair is
+  profile.redistributeAdjust = {};
   const today = new Date().getDay();
   const todayIdx = today === 0 ? 6 : today - 1;
-  let totalPlanned = 0, totalEaten = 0;
-  let passedDays = [], futureDays = [];
-  DAYS.forEach((d,i) => {
-    const t = calcDayTotals(i);
-    const target = getDayTarget(i);
-    if (i <= todayIdx) { totalPlanned += target; totalEaten += t.eaten.kcal; passedDays.push(i); }
-    else { futureDays.push(i); }
+  let totalTarget = 0, totalEaten = 0;
+  const futureDays = [];
+  DAYS.forEach((d, i) => {
+    const target = getDayTarget(i); // puur basisdoel, geen adjust
+    if (i <= todayIdx) {
+      totalTarget += target;
+      totalEaten  += calcDayTotals(i).eaten.kcal;
+    } else {
+      futureDays.push(i);
+    }
   });
-  const surplus = totalEaten - totalPlanned;
-  if (futureDays.length === 0) return;
-  const adjustPerDay = Math.round(surplus / futureDays.length);
-  profile.redistributeAdjust = {};
-  futureDays.forEach(i => { profile.redistributeAdjust[i] = -adjustPerDay; });
+  const surplus = totalEaten - totalTarget; // >0 = te veel, <0 = te weinig
+  if (futureDays.length > 0 && surplus !== 0) {
+    const adj = ri(surplus / futureDays.length);
+    futureDays.forEach(i => { profile.redistributeAdjust[i] = -adj; });
+  }
   saveAll();
 }
 
 // ====== RENDER HOME ======
-function calcDefaultDayTotals(dayIdx) {
-  const day = defaultWeek[dayIdx];
-  if (!day || !day.meals) return { kcal:0, e:0, k:0, v:0 };
-  let kcal=0, e=0, k=0, v=0;
-  day.meals.forEach(meal => {
-    (meal.foods||[]).forEach(food => {
-      const fac = (food.qty||100) / 100;
-      kcal += Math.round((food.kcal||0)*fac);
-      e += Math.round((food.e||0)*fac*10)/10;
-      k += Math.round((food.k||0)*fac*10)/10;
-      v += Math.round((food.v||0)*fac*10)/10;
-    });
-  });
-  return { kcal, e, k, v };
-}
-
-function hasDefaultWeekData() {
-  return Object.keys(defaultWeek).some(i => {
-    const d = defaultWeek[i];
-    return d && d.meals && d.meals.some(m => m.foods && m.foods.length > 0);
-  });
-}
-
 function renderHome() {
   const today = new Date();
   const todayIdx = today.getDay() === 0 ? 6 : today.getDay() - 1;
@@ -923,41 +884,22 @@ function renderHome() {
 
   const grid = document.getElementById('week-grid');
   const weekStart = getWeekStart();
-  const useDefaultGoal = hasDefaultWeekData();
   grid.innerHTML = '';
   DAYS.forEach((day, i) => {
     const totals = calcDayTotals(i);
     const target = getDayTarget(i);
     const adj = (profile.redistributeAdjust && profile.redistributeAdjust[i]) || 0;
     const adjustedTarget = Math.max(100, target + adj);
-    const defaultTotals = calcDefaultDayTotals(i);
+    const pct = adjustedTarget > 0 ? Math.round((totals.eaten.kcal / adjustedTarget) * 100) : 0;
     const isToday = i === todayIdx;
     const dayDate = new Date(weekStart);
     dayDate.setDate(weekStart.getDate() + i);
-    const macros = getMacroTargets(adjustedTarget);
-
-    // Progress bar logic
-    let progressHtml = '';
-    if (useDefaultGoal && defaultTotals.kcal > 0) {
-      // Dual bar: grey = standaard week doel, gekleurd = gegeten
-      const eatenPct = Math.min(100, adjustedTarget > 0 ? Math.round((totals.eaten.kcal / adjustedTarget) * 100) : 0);
-      const goalPct  = Math.min(100, adjustedTarget > 0 ? Math.round((defaultTotals.kcal / adjustedTarget) * 100) : 0);
-      const isOver   = eatenPct > 110;
-      progressHtml = `<div class="day-progress-dual">
-        <div class="day-progress-goal" style="width:${goalPct}%"></div>
-        <div class="day-progress-eaten${isOver?' over':''}" style="width:${eatenPct}%"></div>
-      </div>
-      <div style="font-size:10px;color:var(--text3);margin-top:4px;">Std.doel: ${defaultTotals.kcal} kcal</div>`;
-    } else {
-      const pct = adjustedTarget > 0 ? Math.round((totals.eaten.kcal / adjustedTarget) * 100) : 0;
-      progressHtml = `<div class="day-progress">
-        <div class="day-progress-bar ${pct > 110 ? 'over' : ''}" style="width:${Math.min(pct,100)}%"></div>
-      </div>`;
-    }
 
     const card = document.createElement('div');
     card.className = 'day-card' + (isToday ? ' today' : '');
     card.onclick = () => openDay(i);
+    const macros = getMacroTargets(adjustedTarget);
+    const pct2 = ri(totals.eaten.kcal / adjustedTarget * 100);
     card.innerHTML = `
       <div class="day-header">
         <div>
@@ -965,19 +907,21 @@ function renderHome() {
           <div class="day-date">${dayDate.toLocaleDateString('nl-BE', {day:'numeric',month:'short'})}</div>
         </div>
         <div style="text-align:right">
-          <div class="day-kcal">${Math.round(adjustedTarget)}</div>
-          <div class="day-kcal-label">kcal doel</div>
+          <div style="font-size:15px;font-weight:700;color:var(--accent2)">${ri(totals.eaten.kcal)} / ${ri(adjustedTarget)}</div>
+          <div class="day-kcal-label">kcal</div>
         </div>
       </div>
       <div class="macro-row">
-        <div class="macro-pill"><div class="macro-dot e"></div><span>${macros.protein}g E</span></div>
-        <div class="macro-pill"><div class="macro-dot k"></div><span>${macros.carb}g K</span></div>
-        <div class="macro-pill"><div class="macro-dot v"></div><span>${macros.fat}g V</span></div>
+        <div class="macro-pill"><div class="macro-dot e"></div><span>${r1d(totals.eaten.e)} / ${macros.protein}g E</span></div>
+        <div class="macro-pill"><div class="macro-dot k"></div><span>${r1d(totals.eaten.k)} / ${macros.carb}g K</span></div>
+        <div class="macro-pill"><div class="macro-dot v"></div><span>${r1d(totals.eaten.v)} / ${macros.fat}g V</span></div>
       </div>
-      ${progressHtml}
+      <div class="day-progress">
+        <div class="day-progress-bar ${pct2 > 110 ? 'over' : ''}" style="width:${Math.min(pct2,100)}%"></div>
+      </div>
       <div style="display:flex; justify-content:space-between; margin-top:6px;">
-        <span class="eaten-badge">${totals.eaten.kcal} kcal gegeten</span>
-        <span class="eaten-badge"><span class="eaten-pct" style="${Math.round(totals.eaten.kcal/adjustedTarget*100)>110?'color:var(--red)':''}">${adjustedTarget>0?Math.round(totals.eaten.kcal/adjustedTarget*100):0}%</span> van doel</span>
+        <span class="eaten-badge">${ri(totals.eaten.kcal)} kcal gegeten</span>
+        <span class="eaten-badge"><span class="eaten-pct" style="${pct2>110?'color:var(--red)':''}">${pct2}%</span> van doel</span>
       </div>`;
     grid.appendChild(card);
   });
@@ -1035,14 +979,8 @@ function renderDayContent() {
     </div>`;
 
   day.meals.forEach((meal, mi) => {
-    const mealTotals = meal.foods.reduce((acc, f) => {
-      if (f.checked) {
-        const fac = f.qty/100;
-        acc.kcal += Math.round((f.kcal||0)*fac);
-        acc.e += Math.round((f.e||0)*fac*10)/10;
-        acc.k += Math.round((f.k||0)*fac*10)/10;
-        acc.v += Math.round((f.v||0)*fac*10)/10;
-      }
+    const mealTotals = (meal.foods||[]).reduce((acc, f) => {
+      if (f.checked) { const m = calcFoodMacros(f); acc.kcal+=m.kcal; acc.e+=m.e; acc.k+=m.k; acc.v+=m.v; }
       return acc;
     }, {kcal:0,e:0,k:0,v:0});
 
@@ -1062,15 +1000,14 @@ function renderDayContent() {
       html += `<div style="padding:12px 16px; font-size:13px; color:var(--text3)">Nog geen voeding toegevoegd</div>`;
     } else {
       meal.foods.forEach((food, fi) => {
-        const fac = food.qty/100;
-        const fkcal = Math.round((food.kcal||0)*fac);
+        const fm = calcFoodMacros(food);
         html += `<div class="food-item">
           <div class="food-item-check ${food.checked?'checked':''}" onclick="toggleFood(${mi},${fi})"></div>
           <div class="food-item-info">
             <div class="food-item-name">${food.name}</div>
-            <div class="food-item-detail">${food.qty}g · E:${Math.round((food.e||0)*fac*10)/10}g K:${Math.round((food.k||0)*fac*10)/10}g V:${Math.round((food.v||0)*fac*10)/10}g</div>
+            <div class="food-item-detail">${food.qty}g · E:${fm.e}g K:${fm.k}g V:${fm.v}g</div>
           </div>
-          <span class="food-item-kcal">${fkcal}</span>
+          <span class="food-item-kcal">${fm.kcal}</span>
           <button class="food-item-delete" onclick="deleteFood(${mi},${fi})">✕</button>
         </div>`;
       });
@@ -1092,9 +1029,9 @@ function toggleFood(mi, fi) {
   const food = weekData[currentWeekKey].days[currentDayIdx].meals[mi].foods[fi];
   food.checked = !food.checked;
   saveAll();
+  redistributeKcal(); // herbereken eerst (ook bij afvinken)
   renderDayContent();
   renderHome();
-  redistributeKcal();
 }
 
 function deleteFood(mi, fi) {
@@ -1118,29 +1055,27 @@ function openFoodList() {
   filterFoodListOverview();
 }
 
-function foodDetailLabel(f) {
-  if (f.isPiece && f.pieceGrams) {
-    return `per stuk (~${f.pieceGrams}g): ${f.kcal} kcal · E:${f.e}g K:${f.k}g V:${f.v}g`;
-  }
-  return `per 100g: ${f.kcal} kcal · E:${f.e}g K:${f.k}g V:${f.v}g`;
+function foodLabel(f) {
+  return f.isPiece && f.pieceGrams
+    ? `per stuk (~${f.pieceGrams}g): ${f.kcal} kcal · E:${f.e}g K:${f.k}g V:${f.v}g`
+    : `per 100g: ${f.kcal} kcal · E:${f.e}g K:${f.k}g V:${f.v}g`;
 }
-
-function foodKcalBadge(f) {
-  return f.isPiece ? `${f.kcal}<span style="font-size:10px;color:var(--text3)">/stuk</span>` : f.kcal;
+function pieceBadge(f) {
+  return f.isPiece ? ' <span style="font-size:10px;background:var(--accent-dim);color:var(--accent2);border-radius:4px;padding:1px 5px;margin-left:4px;">stuk</span>' : '';
 }
 
 function filterFoodList() {
   const q = document.getElementById('food-search-input').value.toLowerCase();
   const list = document.getElementById('food-search-list');
   const filtered = currentFoodDb.filter(f => f.name.toLowerCase().includes(q));
-  list.innerHTML = filtered.map((f,i) => {
+  list.innerHTML = filtered.map(f => {
     const idx = currentFoodDb.indexOf(f);
     return `<div class="food-list-item" onclick="openQtyModal(${idx})">
       <div>
-        <div class="food-list-name">${f.name}${f.isPiece ? ' <span style="font-size:11px;background:var(--accent-dim);color:var(--accent2);border-radius:4px;padding:1px 5px;">stuk</span>' : ''}</div>
-        <div class="food-list-detail">${foodDetailLabel(f)}</div>
+        <div class="food-list-name">${f.name}${pieceBadge(f)}</div>
+        <div class="food-list-detail">${foodLabel(f)}</div>
       </div>
-      <span class="food-list-kcal">${foodKcalBadge(f)}</span>
+      <span class="food-list-kcal">${f.kcal}</span>
     </div>`;
   }).join('');
 }
@@ -1151,12 +1086,12 @@ function filterFoodListOverview() {
   const filtered = currentFoodDb.filter(f => f.name.toLowerCase().includes(q));
   list.innerHTML = filtered.length === 0
     ? '<div class="empty-state"><div class="empty-state-icon">🥦</div><div class="empty-state-text">Geen voeding gevonden</div></div>'
-    : filtered.map((f, i) => {
+    : filtered.map(f => {
       const idx = currentFoodDb.indexOf(f);
-      return `<div class="food-list-item" onclick="">
+      return `<div class="food-list-item">
         <div>
-          <div class="food-list-name">${f.name}${f.isPiece ? ' <span style="font-size:11px;background:var(--accent-dim);color:var(--accent2);border-radius:4px;padding:1px 5px;">stuk</span>' : ''}</div>
-          <div class="food-list-detail">${foodDetailLabel(f)}</div>
+          <div class="food-list-name">${f.name}${pieceBadge(f)}</div>
+          <div class="food-list-detail">${foodLabel(f)}</div>
         </div>
         <button class="food-item-delete" onclick="deleteFoodFromDb(${idx})" style="color:var(--text3)">✕</button>
       </div>`;
@@ -1181,8 +1116,7 @@ function openQtyModal(foodIdx) {
   if (isPiece) {
     document.getElementById('qty-input').value = 1;
     document.getElementById('qty-piece-weight').value = selectedFood.pieceGrams;
-    document.getElementById('qty-piece-hint').textContent =
-      `Standaard: ${selectedFood.pieceGrams}g per stuk — pas aan indien nodig`;
+    document.getElementById('qty-piece-hint').textContent = `Standaard: ${selectedFood.pieceGrams}g per stuk`;
   }
   document.getElementById('qty-input-gram').value = isPiece ? selectedFood.pieceGrams : 100;
   document.getElementById('qty-switch-row').style.display = isPiece ? 'block' : 'none';
@@ -1192,20 +1126,14 @@ function openQtyModal(foodIdx) {
 
 function setQtyMode(mode) {
   qtyMode = mode;
-  const isPiece = mode === 'piece';
-  document.getElementById('qty-piece-section').style.display = isPiece ? 'block' : 'none';
-  document.getElementById('qty-gram-section').style.display  = isPiece ? 'none'  : 'block';
+  const ip = mode === 'piece';
+  document.getElementById('qty-piece-section').style.display = ip ? 'block' : 'none';
+  document.getElementById('qty-gram-section').style.display  = ip ? 'none'  : 'block';
   const pb = document.getElementById('qty-mode-piece-btn');
   const gb = document.getElementById('qty-mode-gram-btn');
   if (pb && gb) {
-    pb.style.borderColor = isPiece  ? 'var(--accent)' : 'var(--border)';
-    pb.style.background  = isPiece  ? 'var(--accent-dim)' : 'var(--bg3)';
-    pb.style.color       = isPiece  ? 'var(--accent2)' : 'var(--text2)';
-    pb.style.fontWeight  = isPiece  ? '600' : '500';
-    gb.style.borderColor = !isPiece ? 'var(--accent)' : 'var(--border)';
-    gb.style.background  = !isPiece ? 'var(--accent-dim)' : 'var(--bg3)';
-    gb.style.color       = !isPiece ? 'var(--accent2)' : 'var(--text2)';
-    gb.style.fontWeight  = !isPiece ? '600' : '500';
+    pb.style.cssText = `flex:1;padding:8px;border-radius:var(--radius-xs);font-size:13px;font-weight:${ip?'600':'500'};cursor:pointer;border:1.5px solid ${ip?'var(--accent)':'var(--border)'};background:${ip?'var(--accent-dim)':'var(--bg3)'};color:${ip?'var(--accent2)':'var(--text2)'};`;
+    gb.style.cssText = `flex:1;padding:8px;border-radius:var(--radius-xs);font-size:13px;font-weight:${!ip?'600':'500'};cursor:pointer;border:1.5px solid ${!ip?'var(--accent)':'var(--border)'};background:${!ip?'var(--accent-dim)':'var(--bg3)'};color:${!ip?'var(--accent2)':'var(--text2)'};`;
   }
   updateQtyPreview();
 }
@@ -1215,15 +1143,15 @@ function closeQtyModal(e) {
 }
 
 function changeQty(delta) {
-  const inputId = qtyMode === 'piece' ? 'qty-input' : 'qty-input-gram';
-  const inp = document.getElementById(inputId);
-  inp.value = Math.max(1, parseInt(inp.value || 0) + delta);
+  const id = qtyMode === 'piece' ? 'qty-input' : 'qty-input-gram';
+  const inp = document.getElementById(id);
+  inp.value = Math.max(1, parseInt(inp.value||0) + delta);
   updateQtyPreview();
 }
 
 function changePieceWeight(delta) {
   const inp = document.getElementById('qty-piece-weight');
-  inp.value = Math.max(1, parseInt(inp.value || 0) + delta);
+  inp.value = Math.max(1, parseInt(inp.value||0) + delta);
   updateQtyPreview();
 }
 
@@ -1231,36 +1159,31 @@ function updateQtyPreview() {
   if (!selectedFood) return;
   let totalGrams = 0;
   if (qtyMode === 'piece') {
-    const stuks     = parseInt(document.getElementById('qty-input').value) || 0;
-    const grPerStuk = parseInt(document.getElementById('qty-piece-weight').value) || selectedFood.pieceGrams || 100;
-    totalGrams = stuks * grPerStuk;
+    const stuks = parseInt(document.getElementById('qty-input').value) || 0;
+    const gpst  = parseInt(document.getElementById('qty-piece-weight').value) || selectedFood.pieceGrams || 100;
+    totalGrams = stuks * gpst;
   } else {
     totalGrams = parseInt(document.getElementById('qty-input-gram').value) || 0;
   }
-  // Omrekenen naar per-100g basis voor correcte berekening
-  const basePer = selectedFood.isPiece && selectedFood.pieceGrams ? selectedFood.pieceGrams : 100;
-  const fac = totalGrams / basePer;
-  const kcal = Math.round((selectedFood.kcal||0)*fac);
-  const e    = Math.round((selectedFood.e||0)*fac*10)/10;
-  const k    = Math.round((selectedFood.k||0)*fac*10)/10;
-  const v    = Math.round((selectedFood.v||0)*fac*10)/10;
+  // Bereken via calcFoodMacros door tijdelijk qty in te stellen
+  const tmp = { ...selectedFood, qty: totalGrams };
+  const m = calcFoodMacros(tmp);
   document.getElementById('qty-preview').innerHTML = `
-    <div class="qty-preview-row"><span>Kcal</span><span class="qty-preview-val">${kcal}</span></div>
-    <div class="qty-preview-row"><span>Eiwitten</span><span class="qty-preview-val">${e}g</span></div>
-    <div class="qty-preview-row"><span>Koolhydraten</span><span class="qty-preview-val">${k}g</span></div>
-    <div class="qty-preview-row"><span>Vetten</span><span class="qty-preview-val">${v}g</span></div>
-    <div class="qty-preview-row" style="border-top:0.5px solid var(--border);margin-top:4px;padding-top:4px;">
-      <span style="color:var(--text3)">Totaal gewicht</span>
-      <span class="qty-preview-val" style="color:var(--text3)">${totalGrams}g</span>
+    <div class="qty-preview-row"><span>Kcal</span><span class="qty-preview-val">${m.kcal}</span></div>
+    <div class="qty-preview-row"><span>Eiwitten</span><span class="qty-preview-val">${m.e}g</span></div>
+    <div class="qty-preview-row"><span>Koolhydraten</span><span class="qty-preview-val">${m.k}g</span></div>
+    <div class="qty-preview-row"><span>Vetten</span><span class="qty-preview-val">${m.v}g</span></div>
+    <div class="qty-preview-row" style="border-top:.5px solid var(--border);margin-top:4px;padding-top:4px;">
+      <span style="color:var(--text3)">Totaal gewicht</span><span class="qty-preview-val" style="color:var(--text3)">${totalGrams}g</span>
     </div>`;
 }
 
 function confirmQtyAdd() {
   let totalGrams = 0;
   if (qtyMode === 'piece') {
-    const stuks     = parseInt(document.getElementById('qty-input').value) || 0;
-    const grPerStuk = parseInt(document.getElementById('qty-piece-weight').value) || selectedFood.pieceGrams || 100;
-    totalGrams = stuks * grPerStuk;
+    const stuks = parseInt(document.getElementById('qty-input').value) || 0;
+    const gpst  = parseInt(document.getElementById('qty-piece-weight').value) || selectedFood.pieceGrams || 100;
+    totalGrams = stuks * gpst;
   } else {
     totalGrams = parseInt(document.getElementById('qty-input-gram').value) || 0;
   }
@@ -1271,8 +1194,7 @@ function confirmQtyAdd() {
     weekData[currentWeekKey].days[currentDayIdx].meals[currentMealIdx].foods.push(foodEntry);
     saveAll();
     document.getElementById('qty-modal').style.display = 'none';
-    renderDayContent();
-    renderHome();
+    renderDayContent(); renderHome();
     showToast(`${selectedFood.name} toegevoegd`);
   } else if (foodListContext === 'default') {
     if (!defaultWeek[defaultDayIdx]) defaultWeek[defaultDayIdx] = { meals: MEAL_NAMES_DEFAULT.map(m=>({name:m,foods:[]})) };
@@ -1285,26 +1207,38 @@ function confirmQtyAdd() {
 }
 
 // ====== ADD FOOD TO DB ======
+let addFoodReturnScreen = 'screen-food';
+
+function closeAddFood() { showScreen(addFoodReturnScreen); }
+
+function toggleUnitFields() {
+  const isPiece = document.getElementById('af-unit').value === 'piece';
+  document.getElementById('af-piece-row').style.display = isPiece ? 'flex' : 'none';
+  const suf = isPiece ? '/ stuk' : '/ 100g';
+  ['kcal','e','k','v'].forEach(x => {
+    const lbl = document.getElementById('af-'+x+'-label');
+    if (lbl) lbl.textContent = lbl.textContent.replace(/\/.*/, '/ ') + suf.replace('/ ','');
+  });
+}
+
 function saveNewFood() {
   const name = document.getElementById('af-name').value.trim();
   if (!name) { showToast('Vul een naam in'); return; }
-  const unit = document.getElementById('af-unit')?.value || 'per100';
+  const unit = document.getElementById('af-unit') ? document.getElementById('af-unit').value : 'per100';
   const isPiece = unit === 'piece';
-  const pieceGrams = parseFloat(document.getElementById('af-piece-weight')?.value) || null;
+  const pieceGrams = isPiece ? (parseFloat(document.getElementById('af-piece-weight').value)||null) : null;
   const food = {
     name,
-    per: isPiece && pieceGrams ? pieceGrams : 100,
-    kcal: parseFloat(document.getElementById('af-kcal').value) || 0,
-    e:    parseFloat(document.getElementById('af-e').value)    || 0,
-    k:    parseFloat(document.getElementById('af-k').value)    || 0,
-    v:    parseFloat(document.getElementById('af-v').value)    || 0,
+    kcal: parseFloat(document.getElementById('af-kcal').value)||0,
+    e:    parseFloat(document.getElementById('af-e').value)||0,
+    k:    parseFloat(document.getElementById('af-k').value)||0,
+    v:    parseFloat(document.getElementById('af-v').value)||0,
     isPiece: isPiece && !!pieceGrams,
-    pieceGrams: isPiece ? pieceGrams : null,
+    pieceGrams: pieceGrams,
   };
   currentFoodDb.push(food);
   saveAll();
-  ['af-name','af-kcal','af-e','af-k','af-v'].forEach(id => { document.getElementById(id).value = ''; });
-  if (document.getElementById('af-piece-weight')) document.getElementById('af-piece-weight').value = '';
+  ['af-name','af-kcal','af-e','af-k','af-v'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
   showToast('Opgeslagen in voedingslijst');
   showScreen(addFoodReturnScreen);
   filterFoodList();
@@ -1456,65 +1390,51 @@ function switchDefaultDay(i) {
   renderDefaultDayContent(i);
 }
 
+function calcDefaultDayTotals(dayIdx) {
+  const day = defaultWeek[dayIdx];
+  if (!day || !day.meals) return {kcal:0,e:0,k:0,v:0};
+  let kcal=0,e=0,k=0,v=0;
+  day.meals.forEach(meal => {
+    (meal.foods||[]).forEach(food => {
+      const m = calcFoodMacros(food);
+      kcal+=m.kcal; e+=m.e; k+=m.k; v+=m.v;
+    });
+  });
+  return {kcal, e:r1d(e), k:r1d(k), v:r1d(v)};
+}
+
 function renderDefaultDayContent(idx) {
-  if (!defaultWeek[idx]) defaultWeek[idx] = { meals: MEAL_NAMES_DEFAULT.map(m=>({name:m,foods:[]})) };
+  if (!defaultWeek[idx]) defaultWeek[idx] = {meals: MEAL_NAMES_DEFAULT.map(m=>({name:m,foods:[]}))};
   const day = defaultWeek[idx];
-
-  // Totals for this day
   const dt = calcDefaultDayTotals(idx);
-  const dayTarget = getDayTarget(idx);
-  const adj = (profile.redistributeAdjust && profile.redistributeAdjust[idx]) || 0;
-  const adjustedTarget = Math.max(100, dayTarget + adj);
-  const macros = getMacroTargets(adjustedTarget);
-
-  // Week average (sum of all default days / 7)
+  const target = getDayTarget(idx);
+  const macros = getMacroTargets(target);
   let weekTotal = 0;
   DAYS.forEach((_,i) => { weekTotal += calcDefaultDayTotals(i).kcal; });
-  const weekAvg = Math.round(weekTotal / 7);
-
-  const ePct = macros.protein > 0 ? Math.min(100, Math.round((dt.e / macros.protein) * 100)) : 0;
-  const kPct = macros.carb   > 0 ? Math.min(100, Math.round((dt.k / macros.carb)    * 100)) : 0;
-  const vPct = macros.fat    > 0 ? Math.min(100, Math.round((dt.v / macros.fat)     * 100)) : 0;
+  const weekAvg = ri(weekTotal/7);
+  const ePct = macros.protein>0 ? Math.min(100,ri(dt.e/macros.protein*100)) : 0;
+  const kPct = macros.carb>0   ? Math.min(100,ri(dt.k/macros.carb*100))    : 0;
+  const vPct = macros.fat>0    ? Math.min(100,ri(dt.v/macros.fat*100))     : 0;
 
   let html = `<div class="day-summary-bar" style="margin:12px 16px;">
     <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;">
       <div>
-        <div style="font-size:26px;font-weight:700;color:var(--accent2);">${dt.kcal} <span style="font-size:15px;color:var(--text2);">/ ${Math.round(adjustedTarget)}</span></div>
+        <div style="font-size:24px;font-weight:700;color:var(--accent2)">${dt.kcal} <span style="font-size:14px;color:var(--text2)">/ ${ri(target)}</span></div>
         <div style="font-size:12px;color:var(--text2);margin-top:2px;">kcal gepland van doel</div>
       </div>
       <div style="text-align:right;font-size:12px;color:var(--text3);">
-        Weekgemiddelde<br><span style="color:var(--accent2);font-weight:600;font-size:15px;">${weekAvg}</span> kcal/dag
+        Weekgemiddelde<br><span style="color:var(--accent2);font-weight:600;font-size:14px;">${weekAvg}</span> kcal/dag
       </div>
     </div>
     <div class="macro-bars">
-      <div class="macro-bar-row">
-        <span class="macro-bar-label" style="color:var(--protein-color)">E</span>
-        <div class="macro-bar-track"><div class="macro-bar-fill e" style="width:${ePct}%"></div></div>
-        <span class="macro-bar-val">${dt.e}g / ${macros.protein}g</span>
-      </div>
-      <div class="macro-bar-row">
-        <span class="macro-bar-label" style="color:var(--carb-color)">K</span>
-        <div class="macro-bar-track"><div class="macro-bar-fill k" style="width:${kPct}%"></div></div>
-        <span class="macro-bar-val">${dt.k}g / ${macros.carb}g</span>
-      </div>
-      <div class="macro-bar-row">
-        <span class="macro-bar-label" style="color:var(--fat-color)">V</span>
-        <div class="macro-bar-track"><div class="macro-bar-fill v" style="width:${vPct}%"></div></div>
-        <span class="macro-bar-val">${dt.v}g / ${macros.fat}g</span>
-      </div>
+      <div class="macro-bar-row"><span class="macro-bar-label" style="color:var(--protein-color)">E</span><div class="macro-bar-track"><div class="macro-bar-fill e" style="width:${ePct}%"></div></div><span class="macro-bar-val">${dt.e}g / ${macros.protein}g</span></div>
+      <div class="macro-bar-row"><span class="macro-bar-label" style="color:var(--carb-color)">K</span><div class="macro-bar-track"><div class="macro-bar-fill k" style="width:${kPct}%"></div></div><span class="macro-bar-val">${dt.k}g / ${macros.carb}g</span></div>
+      <div class="macro-bar-row"><span class="macro-bar-label" style="color:var(--fat-color)">V</span><div class="macro-bar-track"><div class="macro-bar-fill v" style="width:${vPct}%"></div></div><span class="macro-bar-val">${dt.v}g / ${macros.fat}g</span></div>
     </div>
   </div>`;
 
-  day.meals.forEach((meal, mi) => {
-    const mealTotals = (meal.foods||[]).reduce((acc, f) => {
-      const fac = (f.qty||100) / 100;
-      acc.kcal += Math.round((f.kcal||0)*fac);
-      acc.e    += Math.round((f.e||0)*fac*10)/10;
-      acc.k    += Math.round((f.k||0)*fac*10)/10;
-      acc.v    += Math.round((f.v||0)*fac*10)/10;
-      return acc;
-    }, {kcal:0, e:0, k:0, v:0});
-
+  day.meals.forEach((meal,mi) => {
+    const mt = (meal.foods||[]).reduce((a,f)=>{const m=calcFoodMacros(f);a.kcal+=m.kcal;a.e+=m.e;a.k+=m.k;a.v+=m.v;return a;},{kcal:0,e:0,k:0,v:0});
     html += `<div class="meal-section">
       <div class="meal-header">
         <div class="meal-title-area">
@@ -1522,37 +1442,32 @@ function renderDefaultDayContent(idx) {
           <input class="meal-title-input" value="${meal.name}" onchange="renameDefaultMeal(${idx},${mi},this.value)">
         </div>
         <div style="display:flex;align-items:center;gap:10px;">
+          <span class="meal-kcal-badge">${mt.kcal} kcal</span>
           <button class="meal-add-btn" onclick="openDefaultFoodSearch(${idx},${mi})">+</button>
         </div>
       </div>
-      <div style="padding:6px 16px 10px; display:flex; gap:10px; flex-wrap:wrap;">
-        <span style="font-size:12px;font-weight:600;color:var(--accent2);">${mealTotals.kcal} kcal</span>
-        <span class="macro-pill"><div class="macro-dot e"></div><span style="font-size:12px;color:var(--text2);">E ${mealTotals.e}g</span></span>
-        <span class="macro-pill"><div class="macro-dot k"></div><span style="font-size:12px;color:var(--text2);">K ${mealTotals.k}g</span></span>
-        <span class="macro-pill"><div class="macro-dot v"></div><span style="font-size:12px;color:var(--text2);">V ${mealTotals.v}g</span></span>
+      <div style="padding:4px 16px 10px;display:flex;gap:12px;flex-wrap:wrap;">
+        <span style="font-size:11px;color:var(--protein-color)">E ${r1d(mt.e)}g</span>
+        <span style="font-size:11px;color:var(--carb-color)">K ${r1d(mt.k)}g</span>
+        <span style="font-size:11px;color:var(--fat-color)">V ${r1d(mt.v)}g</span>
       </div>`;
-    if (!meal.foods || meal.foods.length === 0) {
-      html += `<div style="padding:12px 16px; font-size:13px; color:var(--text3)">Nog geen voeding</div>`;
+    if (!meal.foods||meal.foods.length===0) {
+      html += `<div style="padding:8px 16px 12px;font-size:13px;color:var(--text3)">Nog geen voeding</div>`;
     } else {
-      meal.foods.forEach((f, fi) => {
-        const fac = (f.qty||100) / 100;
-        const fkcal = Math.round((f.kcal||0)*fac);
-        const fe    = Math.round((f.e||0)*fac*10)/10;
-        const fk    = Math.round((f.k||0)*fac*10)/10;
-        const fv    = Math.round((f.v||0)*fac*10)/10;
+      meal.foods.forEach((f,fi) => {
+        const fm = calcFoodMacros(f);
         html += `<div class="food-item">
           <div class="food-item-info">
             <div class="food-item-name">${f.name}</div>
-            <div class="food-item-detail">${f.qty||100}g · E:${fe}g K:${fk}g V:${fv}g</div>
+            <div class="food-item-detail">${f.qty}g · E:${fm.e}g K:${fm.k}g V:${fm.v}g</div>
           </div>
-          <span class="food-item-kcal">${fkcal}</span>
+          <span class="food-item-kcal">${fm.kcal}</span>
           <button class="food-item-delete" onclick="deleteDefaultFood(${idx},${mi},${fi})">✕</button>
         </div>`;
       });
     }
     html += `</div>`;
   });
-
   document.getElementById('default-day-content').innerHTML = html;
 }
 
@@ -1580,7 +1495,7 @@ function openDefaultFoodSearch(dayIdx, mealIdx) {
 // ====== ARCHIVE ======
 function checkArchive() {
   const today = new Date();
-  if (today.getDay() === 1) { // Maandag: archiveer de voorbije week (ma t/m zo)
+  if (today.getDay() === 1) { // Maandag: archiveer vorige week
     const lastWeekKey = getWeekKey(new Date(today.getTime() - 7 * 86400000));
     if (weekData[lastWeekKey] && !archiveData.find(a => a.weekKey === lastWeekKey)) {
       archiveWeek(lastWeekKey);
@@ -1684,253 +1599,7 @@ function closeSettingsSheet(e) {
   }
 }
 
-// ====== BARCODE SCANNER (ZXing via CDN) ======
-let scannerStream = null;
-let scannerInterval = null;
-let lastScannedCode = null;
-let scannedProductData = null;
-let addFoodReturnScreen = 'screen-food';
 
-function toggleUnitFields() {
-  const unit = document.getElementById('af-unit').value;
-  const isPiece = unit === 'piece';
-  document.getElementById('af-piece-row').style.display = isPiece ? 'flex' : 'none';
-  const suffix = isPiece ? '/ stuk' : '/ 100g';
-  document.getElementById('af-kcal-label').textContent = `Kcal ${suffix}`;
-  document.getElementById('af-e-label').textContent    = `Eiwitten ${suffix}`;
-  document.getElementById('af-k-label').textContent    = `Koolhydraten ${suffix}`;
-  document.getElementById('af-v-label').textContent    = `Vetten ${suffix}`;
-}
-
-function closeAddFood() {
-  showScreen(addFoodReturnScreen);
-}
-
-async function openBarcodeScanner() {
-  lastScannedCode = null;
-  document.getElementById('scanner-feedback').textContent = '';
-  showScreen('screen-barcode');
-  try {
-    scannerStream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
-    });
-    const video = document.getElementById('scanner-video');
-    video.srcObject = scannerStream;
-    await video.play();
-    startScanLoop();
-  } catch(err) {
-    showToast('Camera toegang geweigerd');
-    showScreen('screen-add-food');
-  }
-}
-
-function startScanLoop() {
-  const video  = document.getElementById('scanner-video');
-  const canvas = document.getElementById('scanner-canvas');
-  const ctx    = canvas.getContext('2d');
-
-  // Load ZXing dynamically
-  if (window.ZXing) { runScanLoop(video, canvas, ctx); return; }
-  const script = document.createElement('script');
-  script.src = 'https://unpkg.com/@zxing/library@0.21.3/umd/index.min.js';
-  script.onload = () => runScanLoop(video, canvas, ctx);
-  script.onerror = () => { showToast('Scanner kon niet laden'); closeScanner(); };
-  document.head.appendChild(script);
-}
-
-function runScanLoop(video, canvas, ctx) {
-  const hints = new Map();
-  hints.set(ZXing.DecodeHintType.POSSIBLE_FORMATS, [
-    ZXing.BarcodeFormat.EAN_13,
-    ZXing.BarcodeFormat.EAN_8,
-    ZXing.BarcodeFormat.UPC_A,
-  ]);
-  const reader = new ZXing.MultiFormatReader();
-  reader.setHints(hints);
-
-  scannerInterval = setInterval(() => {
-    if (!video.videoWidth) return;
-    canvas.width  = video.videoWidth;
-    canvas.height = video.videoHeight;
-    ctx.drawImage(video, 0, 0);
-    try {
-      const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const luminance = new ZXing.RGBLuminanceSource(imgData.data, canvas.width, canvas.height);
-      const binary    = new ZXing.HybridBinarizer(luminance);
-      const bmp       = new ZXing.BinaryBitmap(binary);
-      const result    = reader.decode(bmp);
-      if (result && result.getText() !== lastScannedCode) {
-        lastScannedCode = result.getText();
-        document.getElementById('scanner-feedback').textContent = '✓ ' + lastScannedCode;
-        clearInterval(scannerInterval);
-        stopCamera();
-        lookupBarcode(lastScannedCode);
-      }
-    } catch(e) { /* geen barcode gevonden in dit frame */ }
-  }, 200);
-}
-
-function stopCamera() {
-  if (scannerStream) { scannerStream.getTracks().forEach(t => t.stop()); scannerStream = null; }
-  if (scannerInterval) { clearInterval(scannerInterval); scannerInterval = null; }
-}
-
-function closeScanner() {
-  stopCamera();
-  showScreen('screen-add-food');
-}
-
-// Bekende losse producten met gewicht per stuk
-const PIECE_WEIGHTS = {
-  'banana': 120, 'banaan': 120, 'apple': 180, 'appel': 180,
-  'egg': 60, 'ei': 60, 'eieren': 60, 'orange': 150, 'sinaasappel': 150,
-  'pear': 170, 'peer': 170, 'kiwi': 75, 'mandarin': 80, 'mandarijn': 80,
-};
-
-async function lookupBarcode(code) {
-  document.getElementById('scanner-feedback').textContent = '🔍 Ophalen via Open Food Facts...';
-  showScreen('screen-barcode');
-  try {
-    const resp = await fetch(`https://world.openfoodfacts.org/api/v0/product/${code}.json`);
-    const data = await resp.json();
-    if (data.status !== 1 || !data.product) {
-      showToast('Product niet gevonden. Handmatig invullen.');
-      showScreen('screen-add-food');
-      return;
-    }
-    const p   = data.product;
-    const n   = p.nutriments || {};
-    const name  = p.product_name_nl || p.product_name || p.abbreviated_product_name || 'Onbekend product';
-    const brand = p.brands || '';
-
-    // Waarden per 100g uit Open Food Facts
-    const per100 = {
-      kcal: Math.round(n['energy-kcal_100g'] || n['energy_100g'] / 4.184 || 0),
-      e:    Math.round((n['proteins_100g']      || 0) * 10) / 10,
-      k:    Math.round((n['carbohydrates_100g'] || 0) * 10) / 10,
-      v:    Math.round((n['fat_100g']           || 0) * 10) / 10,
-    };
-
-    // Portie-detectie: kijk of het product een vaste portie heeft
-    const servingSize   = p.serving_size || '';           // bijv. "45 g" of "1 reep (45g)"
-    const servingGrams  = parseFloat(servingSize);        // extract eerste getal
-    const servingLabel  = servingSize.replace(/^\d+\.?\d*\s*g\s*/i, '').replace(/[()]/g,'').trim();
-    const nameLower     = name.toLowerCase();
-    const knownPieceKey = Object.keys(PIECE_WEIGHTS).find(k => nameLower.includes(k));
-
-    scannedProductData = { name, brand, per100, servingGrams, servingLabel, knownPieceKey, code };
-    showPortionModal();
-  } catch(err) {
-    showToast('Fout bij ophalen. Controleer verbinding.');
-    showScreen('screen-add-food');
-  }
-}
-
-function showPortionModal() {
-  const { name, brand, per100, servingGrams, servingLabel, knownPieceKey } = scannedProductData;
-  document.getElementById('portion-product-name').textContent = name;
-  document.getElementById('portion-product-brand').textContent = brand ? `🏷 ${brand}` : '';
-  document.getElementById('portion-per100-info').textContent =
-    `Per 100g: ${per100.kcal} kcal · E ${per100.e}g · K ${per100.k}g · V ${per100.v}g`;
-
-  const opts = document.getElementById('portion-options');
-  opts.innerHTML = '';
-
-  // Optie: per stuk (bekend gewicht)
-  if (knownPieceKey) {
-    const grams = PIECE_WEIGHTS[knownPieceKey];
-    addPortionOption(opts, `Per stuk (~${grams}g)`, 'piece', grams);
-  }
-  // Optie: per portie (uit label)
-  if (servingGrams && servingGrams > 0) {
-    const label = servingLabel || `${servingGrams}g`;
-    addPortionOption(opts, `Per portie (${label} = ${servingGrams}g)`, 'serving', servingGrams);
-  }
-  // Altijd: per 100g
-  addPortionOption(opts, 'Per 100g', '100g', 100);
-
-  // Selecteer eerste optie
-  const first = opts.querySelector('.portion-opt');
-  if (first) first.classList.add('selected');
-
-  document.getElementById('portion-modal').style.display = 'flex';
-  showScreen('screen-barcode'); // blijf op barcode screen achtergrond
-}
-
-function addPortionOption(container, label, type, grams) {
-  const { per100 } = scannedProductData;
-  const fac   = grams / 100;
-  const kcal  = Math.round(per100.kcal * fac);
-  const e     = Math.round(per100.e * fac * 10) / 10;
-  const k     = Math.round(per100.k * fac * 10) / 10;
-  const v     = Math.round(per100.v * fac * 10) / 10;
-  const el    = document.createElement('div');
-  el.className = 'portion-opt';
-  el.dataset.type  = type;
-  el.dataset.grams = grams;
-  el.style.cssText = 'background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;cursor:pointer;transition:all 0.15s;';
-  el.innerHTML = `
-    <div style="display:flex;justify-content:space-between;align-items:center;">
-      <span style="font-size:14px;font-weight:600;">${label}</span>
-      <span style="font-size:14px;font-weight:700;color:var(--accent2);">${kcal} kcal</span>
-    </div>
-    <div style="font-size:12px;color:var(--text2);margin-top:4px;">E:${e}g · K:${k}g · V:${v}g</div>`;
-  el.onclick = () => {
-    container.querySelectorAll('.portion-opt').forEach(o => {
-      o.style.borderColor = 'var(--border)';
-      o.style.background  = 'var(--bg3)';
-    });
-    el.style.borderColor = 'var(--accent)';
-    el.style.background  = 'var(--accent-dim)';
-  };
-  container.appendChild(el);
-}
-
-function closePortionModal(e) {
-  if (!e || e.target.id === 'portion-modal') {
-    document.getElementById('portion-modal').style.display = 'none';
-    showScreen('screen-add-food');
-  }
-}
-
-function confirmScannedFood() {
-  const selected = document.querySelector('.portion-opt[style*="accent"]') ||
-                   document.querySelector('.portion-opt');
-  if (!selected || !scannedProductData) return;
-
-  const { name, per100 } = scannedProductData;
-  const grams  = parseFloat(selected.dataset.grams);
-  const type   = selected.dataset.type;
-  const fac    = grams / 100;
-  const isPiece = type === 'piece' || type === 'serving';
-
-  let food;
-  if (isPiece) {
-    // Sla op als absolute waarden voor 1 stuk/portie
-    food = {
-      name,
-      per: grams,
-      perLabel: selected.querySelector('span').textContent,
-      kcal: Math.round(per100.kcal * fac),
-      e:    Math.round(per100.e * fac * 10) / 10,
-      k:    Math.round(per100.k * fac * 10) / 10,
-      v:    Math.round(per100.v * fac * 10) / 10,
-      isPiece: true,
-      pieceGrams: grams,
-    };
-  } else {
-    food = { name, per: 100, kcal: per100.kcal, e: per100.e, k: per100.k, v: per100.v };
-  }
-
-  currentFoodDb.push(food);
-  saveAll();
-  document.getElementById('portion-modal').style.display = 'none';
-  showToast(`${name} opgeslagen ✓`);
-  showScreen(addFoodReturnScreen);
-  filterFoodList();
-}
-
-// ====== SYNC STANDAARD WEEK → HUIDIGE WEEK ======
 function syncDefaultToWeek() {
   const hasData = Object.keys(defaultWeek).some(i => {
     const d = defaultWeek[i];
@@ -1938,27 +1607,22 @@ function syncDefaultToWeek() {
   });
   if (!hasData) { showToast('Standaard week is leeg'); closeSettingsSheet(); return; }
   if (!weekData[currentWeekKey]) {
-    weekData[currentWeekKey] = { days: DAYS.map(() => ({
-      meals: MEAL_NAMES_DEFAULT.map(m => ({ name: m, foods: [] }))
-    }))};
+    weekData[currentWeekKey] = {days: DAYS.map(() => ({meals: MEAL_NAMES_DEFAULT.map(m=>({name:m,foods:[]}))}))};
   }
-  DAYS.forEach((d, i) => {
+  DAYS.forEach((d,i) => {
     if (defaultWeek[i] && defaultWeek[i].meals) {
-      const currentMeals = weekData[currentWeekKey].days[i].meals;
-      const defaultMeals = JSON.parse(JSON.stringify(defaultWeek[i].meals));
-      defaultMeals.forEach((dm, mi) => {
+      const cur = weekData[currentWeekKey].days[i].meals;
+      const def = JSON.parse(JSON.stringify(defaultWeek[i].meals));
+      def.forEach((dm,mi) => {
         dm.foods = dm.foods.map(f => {
-          const existing = (currentMeals[mi]?.foods||[]).find(ef => ef.name === f.name && ef.qty === f.qty);
-          return { ...f, checked: existing ? (existing.checked||false) : false };
+          const ex = (cur[mi]?.foods||[]).find(ef => ef.name===f.name && ef.qty===f.qty);
+          return {...f, checked: ex ? (ex.checked||false) : false};
         });
-        if (!dm.name && currentMeals[mi]) dm.name = currentMeals[mi].name;
       });
-      weekData[currentWeekKey].days[i].meals = defaultMeals;
+      weekData[currentWeekKey].days[i].meals = def;
     }
   });
-  saveAll();
-  renderHome();
-  closeSettingsSheet();
+  saveAll(); renderHome(); closeSettingsSheet();
   showToast('Standaard week gesynchroniseerd ✓');
 }
 
@@ -2051,56 +1715,18 @@ function loadAll() {
 }
 
 // ====== DEFAULT FOOD DB ======
-function upgradeFoodDb() {
-  // Voeg isPiece toe aan bestaande losse producten zonder deze vlag
-  const pieceDefaults = {
-    'ei': { pieceGrams: 60 }, 'eieren': { pieceGrams: 60 }, 'egg': { pieceGrams: 60 },
-    'banaan': { pieceGrams: 120 }, 'banana': { pieceGrams: 120 },
-    'appel': { pieceGrams: 180 }, 'apple': { pieceGrams: 180 },
-    'sinaasappel': { pieceGrams: 150 }, 'orange': { pieceGrams: 150 },
-    'peer': { pieceGrams: 170 }, 'pear': { pieceGrams: 170 },
-    'kiwi': { pieceGrams: 75 },
-    'mandarijn': { pieceGrams: 80 }, 'mandarin': { pieceGrams: 80 },
-  };
-  let changed = false;
-  currentFoodDb.forEach(f => {
-    if (f.isPiece) return; // al gemarkeerd
-    const nameLower = f.name.toLowerCase();
-    const match = Object.keys(pieceDefaults).find(k => nameLower.includes(k));
-    if (match) {
-      const pg = pieceDefaults[match].pieceGrams;
-      const fac = pg / 100;
-      // Herbereken waarden per stuk op basis van per-100g waarden
-      f.isPiece    = true;
-      f.pieceGrams = pg;
-      f.kcal = Math.round(f.kcal * fac);
-      f.e    = Math.round(f.e * fac * 10) / 10;
-      f.k    = Math.round(f.k * fac * 10) / 10;
-      f.v    = Math.round(f.v * fac * 10) / 10;
-      changed = true;
-    }
-  });
-  if (changed) saveAll();
-}
-
 function seedFoodDb() {
-  if (currentFoodDb.length > 0) { upgradeFoodDb(); return; }
+  if (currentFoodDb.length > 0) return;
   currentFoodDb = [
     {name:'Kipfilet (gegrild)', kcal:165, e:31, k:0, v:3.6},
     {name:'Zalm (gebakken)', kcal:208, e:20, k:0, v:13},
-    // Ei per stuk (~60g)
     {name:'Ei (heel)', kcal:93, e:7.8, k:0.7, v:6.6, isPiece:true, pieceGrams:60},
     {name:'Griekse yoghurt (0%)', kcal:59, e:10, k:3.6, v:0.4},
     {name:'Havermout (droog)', kcal:389, e:17, k:66, v:7},
     {name:'Bruine rijst (gekookt)', kcal:216, e:4.5, k:45, v:1.8},
     {name:'Volkoren brood', kcal:247, e:13, k:41, v:3.4},
-    // Fruit per stuk
     {name:'Banaan', kcal:107, e:1.3, k:27.6, v:0.4, isPiece:true, pieceGrams:120},
     {name:'Appel', kcal:94, e:0.5, k:25.2, v:0.4, isPiece:true, pieceGrams:180},
-    {name:'Sinaasappel', kcal:71, e:1.4, k:18, v:0.2, isPiece:true, pieceGrams:150},
-    {name:'Peer', kcal:98, e:0.6, k:24, v:0.3, isPiece:true, pieceGrams:170},
-    {name:'Kiwi', kcal:45, e:0.8, k:10, v:0.4, isPiece:true, pieceGrams:75},
-    {name:'Mandarijn', kcal:47, e:0.6, k:11.2, v:0.2, isPiece:true, pieceGrams:80},
     {name:'Brocolli', kcal:34, e:2.8, k:7, v:0.4},
     {name:'Spinazie (rauw)', kcal:23, e:2.9, k:3.6, v:0.4},
     {name:'Zoete aardappel', kcal:86, e:1.6, k:20, v:0.1},
@@ -2116,6 +1742,7 @@ function seedFoodDb() {
     {name:'Edamame', kcal:121, e:11, k:8.6, v:5.2},
     {name:'Komkommer', kcal:15, e:0.6, k:3.6, v:0.1},
     {name:'Tomaat', kcal:18, e:0.9, k:3.9, v:0.2},
+    {name:'Sinaasappel', kcal:71, e:1.4, k:18, v:0.2, isPiece:true, pieceGrams:150},
     {name:'Boter', kcal:717, e:0.9, k:0.1, v:81},
     {name:'Cheddar kaas', kcal:402, e:25, k:1.3, v:33},
     {name:'Pindakaas', kcal:588, e:25, k:20, v:50},
@@ -2123,6 +1750,150 @@ function seedFoodDb() {
     {name:'Roggebrood', kcal:259, e:8.5, k:48, v:3.3},
   ];
   saveAll();
+}
+
+
+// ====== BARCODE SCANNER (html5-qrcode) ======
+let lastScannedCode = null;
+let scannedProductData = null;
+let html5QrScanner = null;
+
+function openBarcodeScanner() {
+  lastScannedCode = null;
+  document.getElementById('scanner-feedback').textContent = 'Camera wordt gestart...';
+  showScreen('screen-barcode');
+  if (window.Html5Qrcode) { startHtml5Scanner(); return; }
+  const s = document.createElement('script');
+  s.src = 'https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js';
+  s.onload = () => startHtml5Scanner();
+  s.onerror = () => { showToast('Scanner kon niet laden'); showScreen('screen-add-food'); };
+  document.head.appendChild(s);
+}
+
+function startHtml5Scanner() {
+  const region = document.getElementById('scanner-region');
+  if (!region) return;
+  region.innerHTML = '';
+  if (html5QrScanner) { try { html5QrScanner.stop(); } catch(e){} html5QrScanner = null; }
+  html5QrScanner = new Html5Qrcode('scanner-region');
+  html5QrScanner.start(
+    {facingMode:'environment'},
+    {fps:10, qrbox:{width:250,height:120},
+     formatsToSupport:[
+       Html5QrcodeSupportedFormats.EAN_13, Html5QrcodeSupportedFormats.EAN_8,
+       Html5QrcodeSupportedFormats.UPC_A,  Html5QrcodeSupportedFormats.UPC_E
+     ]},
+    (code) => {
+      if (code === lastScannedCode) return;
+      lastScannedCode = code;
+      document.getElementById('scanner-feedback').textContent = '✓ ' + code;
+      html5QrScanner.stop().catch(()=>{}).finally(() => { html5QrScanner=null; lookupBarcode(code); });
+    },
+    () => {}
+  ).then(() => {
+    document.getElementById('scanner-feedback').textContent = 'Richt op de barcode...';
+  }).catch(err => {
+    showToast('Camera niet beschikbaar: ' + err);
+    showScreen('screen-add-food');
+  });
+}
+
+function closeScanner() {
+  if (html5QrScanner) { try { html5QrScanner.stop(); } catch(e){} html5QrScanner = null; }
+  showScreen('screen-add-food');
+}
+
+const PIECE_WEIGHTS = {
+  'banaan':120,'banana':120,'appel':180,'apple':180,'ei':60,'eieren':60,'egg':60,
+  'sinaasappel':150,'orange':150,'peer':170,'pear':170,'kiwi':75,'mandarijn':80
+};
+
+async function lookupBarcode(code) {
+  document.getElementById('scanner-feedback').textContent = '🔍 Open Food Facts...';
+  try {
+    const resp = await fetch('https://world.openfoodfacts.org/api/v0/product/'+code+'.json');
+    const data = await resp.json();
+    if (data.status !== 1 || !data.product) {
+      showToast('Product niet gevonden. Handmatig invullen.');
+      showScreen('screen-add-food'); return;
+    }
+    const p = data.product; const n = p.nutriments||{};
+    const name = p.product_name_nl || p.product_name || 'Onbekend product';
+    const brand = p.brands||'';
+    const per100 = {
+      kcal: ri(n['energy-kcal_100g'] || (n['energy_100g']||0)/4.184),
+      e: r1d(n['proteins_100g']||0), k: r1d(n['carbohydrates_100g']||0), v: r1d(n['fat_100g']||0)
+    };
+    const servingGrams = parseFloat(p.serving_size)||0;
+    const servingLabel = (p.serving_size||'').replace(/^\d+\.?\d*\s*g\s*/i,'').replace(/[()]/g,'').trim();
+    const nameLower = name.toLowerCase();
+    const knownPieceKey = Object.keys(PIECE_WEIGHTS).find(k => nameLower.includes(k));
+    scannedProductData = {name, brand, per100, servingGrams, servingLabel, knownPieceKey};
+    showPortionModal();
+  } catch(err) {
+    showToast('Fout bij ophalen product.'); showScreen('screen-add-food');
+  }
+}
+
+function showPortionModal() {
+  const {name,brand,per100,servingGrams,servingLabel,knownPieceKey} = scannedProductData;
+  document.getElementById('portion-product-name').textContent = name;
+  document.getElementById('portion-product-brand').textContent = brand ? '🏷 '+brand : '';
+  document.getElementById('portion-per100-info').textContent =
+    `Per 100g: ${per100.kcal} kcal · E ${per100.e}g · K ${per100.k}g · V ${per100.v}g`;
+  const opts = document.getElementById('portion-options');
+  opts.innerHTML = '';
+  if (knownPieceKey) addPortionOption(opts,'Per stuk (~'+PIECE_WEIGHTS[knownPieceKey]+'g)','piece',PIECE_WEIGHTS[knownPieceKey]);
+  if (servingGrams>0) addPortionOption(opts,'Per portie ('+(servingLabel||servingGrams+'g')+' = '+servingGrams+'g)','serving',servingGrams);
+  addPortionOption(opts,'Per 100g','100g',100);
+  const first = opts.querySelector('.portion-opt');
+  if (first) { first.style.borderColor='var(--accent)'; first.style.background='var(--accent-dim)'; }
+  document.getElementById('portion-modal').style.display = 'flex';
+}
+
+function addPortionOption(container,label,type,grams) {
+  const {per100} = scannedProductData;
+  const fac = grams/100;
+  const el = document.createElement('div');
+  el.className='portion-opt';
+  el.dataset.type=type; el.dataset.grams=grams;
+  el.style.cssText='background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;cursor:pointer;';
+  el.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;">
+    <span style="font-size:14px;font-weight:600;">${label}</span>
+    <span style="font-size:14px;font-weight:700;color:var(--accent2);">${ri(per100.kcal*fac)} kcal</span>
+  </div>
+  <div style="font-size:12px;color:var(--text2);margin-top:4px;">E:${r1d(per100.e*fac)}g · K:${r1d(per100.k*fac)}g · V:${r1d(per100.v*fac)}g</div>`;
+  el.onclick = () => {
+    container.querySelectorAll('.portion-opt').forEach(o=>{o.style.borderColor='var(--border)';o.style.background='var(--bg3)';});
+    el.style.borderColor='var(--accent)'; el.style.background='var(--accent-dim)';
+  };
+  container.appendChild(el);
+}
+
+function closePortionModal(e) {
+  if (!e || e.target.id==='portion-modal') {
+    document.getElementById('portion-modal').style.display='none';
+    showScreen('screen-add-food');
+  }
+}
+
+function confirmScannedFood() {
+  const sel = document.querySelector('.portion-opt[style*="accent-dim"]') || document.querySelector('.portion-opt');
+  if (!sel||!scannedProductData) return;
+  const {name,per100} = scannedProductData;
+  const grams = parseFloat(sel.dataset.grams);
+  const type  = sel.dataset.type;
+  const fac   = grams/100;
+  const isPiece = type==='piece'||type==='serving';
+  const food = isPiece
+    ? {name, kcal:ri(per100.kcal*fac), e:r1d(per100.e*fac), k:r1d(per100.k*fac), v:r1d(per100.v*fac), isPiece:true, pieceGrams:grams}
+    : {name, kcal:per100.kcal, e:per100.e, k:per100.k, v:per100.v, isPiece:false, pieceGrams:null};
+  currentFoodDb.push(food);
+  saveAll();
+  document.getElementById('portion-modal').style.display='none';
+  showToast(name+' opgeslagen ✓');
+  showScreen(addFoodReturnScreen||'screen-food');
+  filterFoodList();
 }
 
 // ====== INIT ======
