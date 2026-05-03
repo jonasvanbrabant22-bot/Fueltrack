@@ -548,11 +548,23 @@
             <line x1="13" y1="7" x2="13" y2="12"/><line x1="16" y1="7" x2="16" y2="17"/>
           </svg>
         </div>
-        <div>
-          <div style="font-size:14px;font-weight:600;color:var(--accent2);">Barcode scannen</div>
-          <div style="font-size:11px;color:var(--text3);margin-top:2px;">Richt op EAN-barcode · Open Food Facts</div>
+        <div style="flex:1;">
+          <div style="font-size:14px;font-weight:600;color:var(--accent2);">Live barcode scannen</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:2px;">Camera · Open Food Facts (gratis)</div>
         </div>
       </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;border-top:.5px solid var(--border);" onclick="document.getElementById('photo-barcode-input').click()">
+        <div style="width:36px;height:36px;background:var(--bg3);border-radius:var(--radius-xs);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:var(--text2);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
+          </svg>
+        </div>
+        <div style="flex:1;">
+          <div style="font-size:14px;font-weight:600;color:var(--text);">Foto van barcode kiezen</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:2px;">Als live scannen niet werkt</div>
+        </div>
+      </div>
+      <input type="file" id="photo-barcode-input" accept="image/*" style="display:none" onchange="scanFromPhoto(event)">
       <div id="barcode-status" style="display:none;padding:8px 16px;font-size:13px;color:var(--text2);border-top:.5px solid var(--border);"></div>
     </div>
     <div style="font-size:11px;color:var(--text3);padding:14px 16px 4px;text-transform:uppercase;letter-spacing:.6px;font-weight:600;">Of handmatig invullen</div>
@@ -603,8 +615,28 @@
     <div style="width:36px"></div>
   </div>
   <div id="scanner-region" style="width:100%;height:100%;"></div>
-  <div style="position:absolute;bottom:60px;left:0;right:0;text-align:center;z-index:20;pointer-events:none;">
-    <div id="scanner-feedback" style="color:var(--accent2);font-size:14px;font-weight:600;background:rgba(0,0,0,.6);display:inline-block;padding:8px 18px;border-radius:20px;"></div>
+  <!-- Viewfinder overlay -->
+  <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:15;">
+    <div style="width:280px;height:160px;border:2px solid rgba(255,255,255,0.5);border-radius:14px;box-shadow:0 0 0 4000px rgba(0,0,0,0.45);position:relative;">
+      <div style="position:absolute;top:-3px;left:-3px;width:28px;height:28px;border-top:4px solid var(--accent2);border-left:4px solid var(--accent2);border-radius:6px 0 0 0;"></div>
+      <div style="position:absolute;top:-3px;right:-3px;width:28px;height:28px;border-top:4px solid var(--accent2);border-right:4px solid var(--accent2);border-radius:0 6px 0 0;"></div>
+      <div style="position:absolute;bottom:-3px;left:-3px;width:28px;height:28px;border-bottom:4px solid var(--accent2);border-left:4px solid var(--accent2);border-radius:0 0 0 6px;"></div>
+      <div style="position:absolute;bottom:-3px;right:-3px;width:28px;height:28px;border-bottom:4px solid var(--accent2);border-right:4px solid var(--accent2);border-radius:0 0 6px 0;"></div>
+    </div>
+  </div>
+  <!-- Tips & feedback -->
+  <div style="position:absolute;bottom:90px;left:0;right:0;text-align:center;z-index:20;pointer-events:none;padding:0 20px;">
+    <div id="scanner-feedback" style="color:var(--accent2);font-size:14px;font-weight:600;background:rgba(0,0,0,.75);display:inline-block;padding:8px 18px;border-radius:20px;margin-bottom:8px;"></div>
+    <div style="color:rgba(255,255,255,0.7);font-size:11px;margin-top:6px;line-height:1.5;">
+      💡 Houd telefoon recht boven de barcode<br>~10cm afstand · goede verlichting · niet bewegen
+    </div>
+  </div>
+  <!-- Foto upload fallback knop onderaan -->
+  <div style="position:absolute;bottom:24px;left:20px;right:20px;z-index:20;">
+    <button onclick="document.getElementById('photo-barcode-input2').click()" style="width:100%;padding:12px;background:rgba(255,255,255,0.15);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-sm);color:#fff;font-size:13px;font-weight:500;cursor:pointer;">
+      📷 Lukt het niet? Kies een foto
+    </button>
+    <input type="file" id="photo-barcode-input2" accept="image/*" style="display:none" onchange="scanFromPhoto(event)">
   </div>
 </div>
 
@@ -1835,54 +1867,123 @@ function seedFoodDb() {
 }
 
 
-// ====== BARCODE SCANNER (html5-qrcode) ======
+// ====== BARCODE SCANNER (ZXing-browser — robuust op iOS) ======
 let lastScannedCode = null;
 let scannedProductData = null;
-let html5QrScanner = null;
+let zxingReader = null;
+let zxingControls = null;
+let zxingStream = null;
 
 function openBarcodeScanner() {
   lastScannedCode = null;
-  document.getElementById('scanner-feedback').textContent = 'Camera wordt gestart...';
   showScreen('screen-barcode');
-  if (window.Html5Qrcode) { startHtml5Scanner(); return; }
+  document.getElementById('scanner-feedback').textContent = 'Library laden...';
+  if (window.ZXingBrowser) { startZxingScanner(); return; }
   const s = document.createElement('script');
-  s.src = 'https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js';
-  s.onload = () => startHtml5Scanner();
-  s.onerror = () => { showToast('Scanner kon niet laden'); showScreen('screen-add-food'); };
+  s.src = 'https://unpkg.com/@zxing/browser@0.1.5/umd/zxing-browser.min.js';
+  s.onload = () => startZxingScanner();
+  s.onerror = () => {
+    document.getElementById('scanner-feedback').textContent = 'Library kon niet laden';
+    showToast('Geen internet? Gebruik foto-upload onderaan');
+  };
   document.head.appendChild(s);
 }
 
-function startHtml5Scanner() {
+async function startZxingScanner() {
   const region = document.getElementById('scanner-region');
   if (!region) return;
-  region.innerHTML = '';
-  if (html5QrScanner) { try { html5QrScanner.stop(); } catch(e){} html5QrScanner = null; }
-  html5QrScanner = new Html5Qrcode('scanner-region');
-  html5QrScanner.start(
-    {facingMode:'environment'},
-    {fps:10, qrbox:{width:250,height:120},
-     formatsToSupport:[
-       Html5QrcodeSupportedFormats.EAN_13, Html5QrcodeSupportedFormats.EAN_8,
-       Html5QrcodeSupportedFormats.UPC_A,  Html5QrcodeSupportedFormats.UPC_E
-     ]},
-    (code) => {
-      if (code === lastScannedCode) return;
-      lastScannedCode = code;
-      document.getElementById('scanner-feedback').textContent = '✓ ' + code;
-      html5QrScanner.stop().catch(()=>{}).finally(() => { html5QrScanner=null; lookupBarcode(code); });
-    },
-    () => {}
-  ).then(() => {
-    document.getElementById('scanner-feedback').textContent = 'Richt op de barcode...';
-  }).catch(err => {
-    showToast('Camera niet beschikbaar: ' + err);
-    showScreen('screen-add-food');
-  });
+  region.innerHTML = '<video id="zxing-video" style="width:100%;height:100%;object-fit:cover;" playsinline muted autoplay></video>';
+  document.getElementById('scanner-feedback').textContent = 'Camera wordt gestart...';
+  try {
+    // BrowserMultiFormatReader supports EAN-13, EAN-8, UPC-A, UPC-E by default
+    zxingReader = new ZXingBrowser.BrowserMultiFormatReader(undefined, { delayBetweenScanAttempts: 100 });
+    const video = document.getElementById('zxing-video');
+
+    // Use environment camera with high resolution for small barcodes
+    const constraints = {
+      video: {
+        facingMode: { ideal: 'environment' },
+        width: { ideal: 1920 },
+        height: { ideal: 1080 },
+        focusMode: 'continuous'
+      }
+    };
+    zxingStream = await navigator.mediaDevices.getUserMedia(constraints);
+    video.srcObject = zxingStream;
+    await video.play();
+
+    document.getElementById('scanner-feedback').textContent = 'Houd telefoon recht boven barcode (~10cm)';
+
+    // decodeFromStream uses the existing stream
+    zxingControls = await zxingReader.decodeFromVideoElement(video, (result, err) => {
+      if (result && result.getText() !== lastScannedCode) {
+        lastScannedCode = result.getText();
+        document.getElementById('scanner-feedback').textContent = '✓ ' + lastScannedCode;
+        stopZxing();
+        lookupBarcode(lastScannedCode);
+      }
+    });
+  } catch(err) {
+    console.error('Scanner error:', err);
+    document.getElementById('scanner-feedback').textContent = 'Camera fout — gebruik foto-upload';
+    showToast('Camera kon niet starten');
+  }
+}
+
+function stopZxing() {
+  try { if (zxingControls) zxingControls.stop(); } catch(e) {}
+  try { if (zxingReader) zxingReader.reset(); } catch(e) {}
+  if (zxingStream) {
+    zxingStream.getTracks().forEach(t => t.stop());
+    zxingStream = null;
+  }
+  zxingControls = null;
+  zxingReader = null;
 }
 
 function closeScanner() {
-  if (html5QrScanner) { try { html5QrScanner.stop(); } catch(e){} html5QrScanner = null; }
+  stopZxing();
   showScreen('screen-add-food');
+}
+
+// Foto-fallback: als live scanner niet werkt, kies een foto van galerij
+async function scanFromPhoto(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  document.getElementById('scanner-feedback').textContent = 'Foto analyseren...';
+  showScreen('screen-barcode');
+
+  // Load ZXing browser if not yet loaded
+  if (!window.ZXingBrowser) {
+    await new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = 'https://unpkg.com/@zxing/browser@0.1.5/umd/zxing-browser.min.js';
+      s.onload = resolve;
+      s.onerror = reject;
+      document.head.appendChild(s);
+    }).catch(() => {
+      showToast('Library niet bereikbaar');
+      showScreen('screen-add-food');
+    });
+  }
+
+  try {
+    const reader = new ZXingBrowser.BrowserMultiFormatReader();
+    const url = URL.createObjectURL(file);
+    const result = await reader.decodeFromImageUrl(url);
+    URL.revokeObjectURL(url);
+    if (result && result.getText()) {
+      const code = result.getText();
+      document.getElementById('scanner-feedback').textContent = '✓ ' + code;
+      lookupBarcode(code);
+    } else {
+      throw new Error('Geen barcode gevonden');
+    }
+  } catch(err) {
+    showToast('Geen barcode in deze foto. Probeer scherper.');
+    showScreen('screen-add-food');
+  }
+  event.target.value = '';
 }
 
 const PIECE_WEIGHTS = {
