@@ -1832,6 +1832,7 @@ function loadAll() {
 function seedFoodDb() {
   if (currentFoodDb.length > 0) return;
   currentFoodDb = [
+    // ====== ORIGINEEL (behouden) ======
     {name:'Kipfilet (gegrild)', kcal:165, e:31, k:0, v:3.6},
     {name:'Zalm (gebakken)', kcal:208, e:20, k:0, v:13},
     {name:'Ei (heel)', kcal:93, e:7.8, k:0.7, v:6.6, isPiece:true, pieceGrams:60},
@@ -1862,7 +1863,348 @@ function seedFoodDb() {
     {name:'Pindakaas', kcal:588, e:25, k:20, v:50},
     {name:'Witte rijst (gekookt)', kcal:206, e:4.3, k:45, v:0.4},
     {name:'Roggebrood', kcal:259, e:8.5, k:48, v:3.3},
+
+    // ====== EIWITTEN - Vlees & Vis ======
+    {name:'Fuel Your Body kipblokjes', kcal:165, e:27, k:1, v:6},
+    {name:'Kalkoenfilet (rauw)', kcal:105, e:22, k:0, v:1.5},
+    {name:'Mager rundvlees (rauw)', kcal:150, e:22, k:0, v:7},
+    {name:'Mager rundergehakt 5% vet', kcal:125, e:21, k:0, v:5},
+    {name:'Tonijnsteak (rauw)', kcal:130, e:28, k:0, v:1},
+    {name:'Magere spekreepjes', kcal:200, e:22, k:0, v:12},
+    {name:'Gerookte zalm', kcal:180, e:22, k:0, v:10},
+
+    // ====== EIWITTEN - Zuivel ======
+    {name:'Cottage cheese (mager)', kcal:95, e:13, k:4, v:2.5},
+    {name:'Feta (light)', kcal:200, e:17, k:4, v:13},
+    {name:'Geraspte kaas (light)', kcal:250, e:28, k:0, v:15},
+    {name:'Parmezaan', kcal:430, e:38, k:4, v:30},
+    {name:'Kookroom 15% (light)', kcal:175, e:3, k:4, v:15},
+
+    // ====== EIWITTEN - Eieren & Supplementen ======
+    {name:'Ei-wit alleen', kcal:17, e:3.6, k:0.2, v:0.1, isPiece:true, pieceGrams:33},
+    {name:'XXL Whey Delicious (aardbei)', kcal:115, e:24, k:2, v:1.5, isPiece:true, pieceGrams:30},
+
+    // ====== KOOLHYDRATEN - Granen rauw ======
+    {name:'Basmati rijst (rauw)', kcal:350, e:7, k:78, v:0.5},
+    {name:'Zilvervliesrijst (rauw)', kcal:350, e:8, k:73, v:2.5},
+    {name:'Quinoa (rauw)', kcal:370, e:14, k:64, v:6},
+    {name:'Couscous (rauw)', kcal:355, e:13, k:72, v:1.5},
+    {name:'Bulgur (rauw)', kcal:340, e:12, k:70, v:1.5},
+    {name:'Volkoren spaghetti (rauw)', kcal:350, e:12, k:65, v:2.5},
+    {name:'Rijstwafel (puur)', kcal:27, e:0.6, k:5.6, v:0.2, isPiece:true, pieceGrams:7},
+
+    // ====== KOOLHYDRATEN - Aardappel & Puree ======
+    {name:'Aardappelpuree Boni (bereid)', kcal:90, e:2, k:14, v:3},
+    {name:'Boni Spinaziepuree', kcal:80, e:1.9, k:9.6, v:3.5},
+
+    // ====== KOOLHYDRATEN - Fruit ======
+    {name:'Bessen (diepvries)', kcal:45, e:0.7, k:10, v:0.3},
+    {name:'Cherrytomaatjes', kcal:18, e:0.9, k:4, v:0.2},
+    {name:'Rozijnen', kcal:300, e:3, k:75, v:0.5},
+    {name:'Dadels (ontpit)', kcal:20, e:0.2, k:4.9, v:0, isPiece:true, pieceGrams:7},
+    {name:'Honing', kcal:305, e:0.3, k:82, v:0},
+
+    // ====== KOOLHYDRATEN - Sport ======
+    {name:'Energiegel (sport)', kcal:100, e:0, k:25, v:0, isPiece:true, pieceGrams:40},
+    {name:'Isotone drank (poederpakje)', kcal:70, e:0, k:18, v:0, isPiece:true, pieceGrams:25},
+
+    // ====== KOOLHYDRATEN - Sauzen ======
+    {name:'Manna Currysaus', kcal:75, e:2, k:10, v:3},
+    {name:'Passata / gezeefde tomaten', kcal:30, e:1.5, k:6, v:0.2},
+    {name:'Sojasaus (laag zout)', kcal:50, e:8, k:4, v:0},
+
+    // ====== VETTEN - Noten & Zaden ======
+    {name:'Cashewnoten', kcal:555, e:18, k:30, v:44},
+    {name:'Walnoten', kcal:655, e:15, k:14, v:65},
+    {name:'Pompoenpitten', kcal:560, e:30, k:14, v:49},
+    {name:'Sesamzaadjes', kcal:570, e:18, k:23, v:50},
+
+    // ====== VETTEN - Oliën & Avocado ======
+    {name:'Sesamolie', kcal:884, e:0, k:0, v:100},
+    {name:'Avocado', kcal:160, e:2, k:9, v:15, isPiece:true, pieceGrams:150},
+
+    // ====== GROENTEN - Vers ======
+    {name:'Paprika (rauw)', kcal:30, e:1, k:7, v:0.3},
+    {name:'Champignons (rauw)', kcal:22, e:3, k:3, v:0.3},
+    {name:'Courgette (rauw)', kcal:17, e:1.2, k:3, v:0.3},
+    {name:'Worteltjes (rauw)', kcal:41, e:0.9, k:9.6, v:0.2},
+    {name:'Salademix', kcal:17, e:1.4, k:2.9, v:0.2},
+    {name:'Groene asperges (rauw)', kcal:20, e:2.2, k:3.9, v:0.1},
+    {name:'Kikkererwten (blik, uitgelekt)', kcal:120, e:7, k:18, v:2.5},
+
+    // ====== KRUIDEN & EXTRA ======
+    {name:'Balsamico azijn', kcal:90, e:0.5, k:17, v:0},
+    {name:'Dijon mosterd', kcal:65, e:4, k:5, v:4},
+    {name:'Citroensap', kcal:22, e:0.4, k:7, v:0.2},
+    {name:'Bouillon (gemaakt)', kcal:5, e:0.5, k:0.5, v:0.1},
+
+    // ====== MEALPREPS (totaal per bakje = 1 stuk) ======
+    {name:'MP#1 Kip+Currysaus+Rijst', kcal:685, e:51, k:75, v:17, isPiece:true, pieceGrams:600},
+    {name:'MP#2 Kip+Spinaziepuree+Banaan', kcal:675, e:57, k:63, v:22, isPiece:true, pieceGrams:740},
+    {name:'MP#3 Kip+Aardappelpuree', kcal:678, e:50, k:76, v:15, isPiece:true, pieceGrams:570},
+    {name:'MP#4 Kip+Cottage+Rauwkost (vers)', kcal:675, e:55, k:68, v:18, isPiece:true, pieceGrams:680},
+    {name:'MP#5 Kip+Zoete Aardappel Oven', kcal:685, e:50, k:76, v:16, isPiece:true, pieceGrams:570},
+    {name:'MP#6 Kip Mediterraan+Couscous+Feta', kcal:690, e:52, k:74, v:18, isPiece:true, pieceGrams:570},
+    {name:'MP#7 Kip Aziatisch+Quinoa', kcal:680, e:53, k:72, v:17, isPiece:true, pieceGrams:580},
+    {name:'MP#8 Kip+Zilvervliesrijst+Tomatensaus', kcal:680, e:51, k:76, v:16, isPiece:true, pieceGrams:670},
+    {name:'MP#9 Kip+Aardappelblokjes Oven+Asperges', kcal:678, e:50, k:75, v:16, isPiece:true, pieceGrams:570},
+    {name:'MP#10 Kip+Bulgur+Yoghurtsaus', kcal:682, e:52, k:74, v:17, isPiece:true, pieceGrams:570},
   ];
+  saveAll();
+}
+
+
+// ====== DEFAULT WEEK SEED (Jonas' schema) ======
+function seedDefaultWeek() {
+  // Niet overschrijven als gebruiker al een standaard week heeft ingevuld
+  if (Object.keys(defaultWeek).length > 0) return;
+
+  // Helper om food entry te maken vanuit DB (zoekt op naam)
+  function f(name, qty) {
+    const item = currentFoodDb.find(x => x.name === name);
+    if (!item) {
+      console.warn('Item niet gevonden in DB:', name);
+      return null;
+    }
+    return { ...item, qty, checked: false };
+  }
+
+  // Helper om dag te bouwen
+  function buildDay(meals) {
+    return {
+      meals: ['Ochtend', 'Middag', '4-uurtje', 'Avondeten', 'Nacht'].map(name => ({
+        name,
+        foods: (meals[name] || []).filter(x => x !== null)
+      }))
+    };
+  }
+
+  // ====== MAANDAG (Rust) ======
+  defaultWeek[0] = buildDay({
+    'Ochtend': [
+      f('Griekse yoghurt (0%)', 250),
+      f('Havermout (droog)', 40),
+      f('XXL Whey Delicious (aardbei)', 30),
+      f('Cashewnoten', 20),
+      f('Bessen (diepvries)', 50),
+    ],
+    'Middag': [
+      f('MP#4 Kip+Cottage+Rauwkost (vers)', 680),
+    ],
+    '4-uurtje': [
+      f('Ei (heel)', 180),
+      f('Cherrytomaatjes', 100),
+      f('Komkommer', 100),
+    ],
+    'Avondeten': [
+      f('Zalm (gebakken)', 180),
+      f('Aardappelen (gekookt)', 80),
+      f('Salademix', 80),
+      f('Avocado', 50),
+      f('Ei (heel)', 60),
+      f('Olijfolie', 10),
+    ],
+    'Nacht': [
+      f('Kwark (mager)', 250),
+      f('Appel', 180),
+      f('Cashewnoten', 15),
+    ],
+  });
+
+  // ====== DINSDAG (LSD) ======
+  defaultWeek[1] = buildDay({
+    'Ochtend': [
+      f('Havermout (droog)', 100),
+      f('XXL Whey Delicious (aardbei)', 30),
+      f('Banaan', 120),
+      f('Cashewnoten', 20),
+    ],
+    'Middag': [
+      f('MP#1 Kip+Currysaus+Rijst', 600),
+    ],
+    '4-uurtje': [
+      f('Cottage cheese (mager)', 200),
+      f('Rijstwafel (puur)', 14),
+      f('Honing', 15),
+    ],
+    'Avondeten': [
+      f('XXL Whey Delicious (aardbei)', 30),
+      f('Banaan', 120),
+      f('Kipfilet (gegrild)', 180),
+      f('Aardappelen (gekookt)', 100),
+      f('Brocolli', 150),
+      f('Paprika (rauw)', 80),
+      f('Olijfolie', 10),
+    ],
+    'Nacht': [
+      f('Kwark (mager)', 250),
+      f('Walnoten', 15),
+    ],
+  });
+
+  // ====== WOENSDAG (Kracht Push) ======
+  defaultWeek[2] = buildDay({
+    'Ochtend': [
+      f('Havermout (droog)', 80),
+      f('XXL Whey Delicious (aardbei)', 30),
+      f('Banaan', 120),
+      f('Cashewnoten', 20),
+    ],
+    'Middag': [
+      f('MP#2 Kip+Spinaziepuree+Banaan', 740),
+    ],
+    '4-uurtje': [
+      f('Rijstwafel (puur)', 14),
+      f('Pindakaas', 20),
+      f('Banaan', 120),
+    ],
+    'Avondeten': [
+      f('XXL Whey Delicious (aardbei)', 30),
+      f('Banaan', 120),
+      f('Mager rundvlees (rauw)', 160),
+      f('Basmati rijst (rauw)', 50),
+      f('Brocolli', 150),
+      f('Paprika (rauw)', 80),
+      f('Olijfolie', 10),
+    ],
+    'Nacht': [
+      f('Cottage cheese (mager)', 200),
+      f('Appel', 180),
+      f('Pompoenpitten', 10),
+    ],
+  });
+
+  // ====== DONDERDAG (Rust) ======
+  defaultWeek[3] = buildDay({
+    'Ochtend': [
+      f('Griekse yoghurt (0%)', 250),
+      f('Havermout (droog)', 50),
+      f('XXL Whey Delicious (aardbei)', 30),
+      f('Cashewnoten', 20),
+      f('Bessen (diepvries)', 50),
+    ],
+    'Middag': [
+      f('MP#5 Kip+Zoete Aardappel Oven', 570),
+    ],
+    '4-uurtje': [
+      f('Ei (heel)', 180),
+      f('Cherrytomaatjes', 100),
+      f('Komkommer', 100),
+    ],
+    'Avondeten': [
+      f('Tonijnsteak (rauw)', 200),
+      f('Zoete aardappel', 120),
+      f('Salademix', 80),
+      f('Avocado', 50),
+      f('Olijfolie', 10),
+    ],
+    'Nacht': [
+      f('Cottage cheese (mager)', 250),
+      f('Appel', 180),
+      f('Walnoten', 10),
+    ],
+  });
+
+  // ====== VRIJDAG (LSD) ======
+  defaultWeek[4] = buildDay({
+    'Ochtend': [
+      f('Havermout (droog)', 100),
+      f('XXL Whey Delicious (aardbei)', 30),
+      f('Banaan', 120),
+      f('Rozijnen', 25),
+    ],
+    'Middag': [
+      f('MP#3 Kip+Aardappelpuree', 570),
+    ],
+    '4-uurtje': [
+      f('Cottage cheese (mager)', 200),
+      f('Rijstwafel (puur)', 14),
+      f('Honing', 15),
+    ],
+    'Avondeten': [
+      f('XXL Whey Delicious (aardbei)', 30),
+      f('Banaan', 120),
+      f('Kipfilet (gegrild)', 180),
+      f('Aardappelen (gekookt)', 100),
+      f('Brocolli', 150),
+      f('Paprika (rauw)', 80),
+      f('Olijfolie', 10),
+    ],
+    'Nacht': [
+      f('Kwark (mager)', 250),
+      f('Walnoten', 15),
+    ],
+  });
+
+  // ====== ZATERDAG (Interval + Pull, thuis koken) ======
+  defaultWeek[5] = buildDay({
+    'Ochtend': [
+      f('Havermout (droog)', 120),
+      f('XXL Whey Delicious (aardbei)', 30),
+      f('Banaan', 120),
+      f('Rozijnen', 25),
+    ],
+    'Middag': [
+      f('XXL Whey Delicious (aardbei)', 45),
+      f('Banaan', 120),
+      f('Kipfilet (gegrild)', 180),
+      f('Basmati rijst (rauw)', 100),
+      f('Paprika (rauw)', 100),
+      f('Brocolli', 100),
+      f('Olijfolie', 10),
+    ],
+    '4-uurtje': [
+      f('Cottage cheese (mager)', 200),
+      f('Walnoten', 15),
+      f('Bessen (diepvries)', 50),
+    ],
+    'Avondeten': [
+      f('Zalm (gebakken)', 180),
+      f('Zoete aardappel', 100),
+      f('Brocolli', 150),
+      f('Paprika (rauw)', 80),
+      f('Olijfolie', 10),
+    ],
+    'Nacht': [],
+  });
+
+  // ====== ZONDAG (Lange LSD + Benen, thuis koken) ======
+  defaultWeek[6] = buildDay({
+    'Ochtend': [
+      f('Havermout (droog)', 100),
+      f('XXL Whey Delicious (aardbei)', 30),
+      f('Banaan', 120),
+      f('Rozijnen', 25),
+      f('Honing', 10),
+    ],
+    'Middag': [
+      f('Kipfilet (gegrild)', 180),
+      f('Basmati rijst (rauw)', 90),
+      f('Brocolli', 150),
+      f('Paprika (rauw)', 100),
+      f('Olijfolie', 10),
+    ],
+    '4-uurtje': [
+      f('XXL Whey Delicious (aardbei)', 30),
+      f('Banaan', 120),
+      f('Melk (halfvol)', 200),
+      f('Rijstwafel (puur)', 14),
+      f('Honing', 10),
+    ],
+    'Avondeten': [
+      f('Mager rundvlees (rauw)', 180),
+      f('Aardappelen (gekookt)', 130),
+      f('Brocolli', 150),
+      f('Paprika (rauw)', 80),
+      f('Olijfolie', 10),
+    ],
+    'Nacht': [
+      f('Cottage cheese (mager)', 250),
+      f('Banaan', 120),
+      f('Cashewnoten', 10),
+    ],
+  });
+
   saveAll();
 }
 
@@ -2255,6 +2597,7 @@ document.addEventListener('touchend', (e) => {
 // ====== INIT ======
 loadAll();
 seedFoodDb();
+seedDefaultWeek();
 applyDarkMode();
 initCurrentWeek();
 checkArchive();
