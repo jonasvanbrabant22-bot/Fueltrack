@@ -193,6 +193,17 @@
   .food-item-delete { width: 24px; height: 24px; background: none; border: none; cursor: pointer; color: var(--text3); font-size: 16px; padding: 0; display: flex; align-items: center; justify-content: center; }
   .food-item-delete:active { color: var(--red); }
 
+  .food-item-info-btn { width: 24px; height: 24px; background: none; border: 1px solid var(--text3); border-radius: 50%; cursor: pointer; color: var(--text3); font-size: 11px; padding: 0; display: flex; align-items: center; justify-content: center; font-weight: 700; font-family: serif; font-style: italic; }
+  .food-item-info-btn:active { color: var(--accent2); border-color: var(--accent2); }
+
+  .components-list { margin-top: 8px; padding: 0; }
+  .components-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .components-row:last-child { border-bottom: none; }
+  .components-row-left { flex: 1; min-width: 0; }
+  .components-row-name { color: var(--text); font-weight: 500; }
+  .components-row-qty { color: var(--text3); font-size: 11px; margin-top: 2px; }
+  .components-row-kcal { color: var(--accent2); font-size: 12px; font-weight: 600; flex-shrink: 0; padding-left: 12px; }
+
   /* FOOD SEARCH SCREEN */
   .search-bar { background: var(--bg3); border-radius: var(--radius-sm); border: 0.5px solid var(--border); padding: 10px 14px; display: flex; align-items: center; gap: 10px; margin: 8px 16px; }
   .search-bar input { background: none; border: none; color: var(--text); font-size: 15px; flex: 1; outline: none; }
@@ -740,6 +751,13 @@
         </div>
         <div class="toggle on" id="dark-toggle"></div>
       </div>
+      <div class="settings-row" onclick="openMealBuilder()">
+        <div class="settings-row-left">
+          <svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20"/></svg>
+          Eigen maaltijd maken
+        </div>
+        <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:var(--text3);fill:none;stroke-width:2;stroke-linecap:round"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
       <div class="settings-row" onclick="syncDefaultToWeek()">
         <div class="settings-row-left">
           <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
@@ -777,6 +795,60 @@
       </div>
     </div>
     <button class="btn-secondary" onclick="closeSettingsSheet()" style="margin:0;">Sluiten</button>
+  </div>
+</div>
+
+<!-- ========== SCREEN: MEAL BUILDER (eigen maaltijd maken) ========== -->
+<div class="screen safe-top" id="screen-meal-builder">
+  <div class="topbar">
+    <button class="btn-icon" onclick="closeMealBuilder()">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <span class="topbar-title">Eigen maaltijd</span>
+    <div style="width:36px"></div>
+  </div>
+  <div style="overflow-y:auto; flex:1; padding-bottom:32px;">
+
+    <div class="form-section" style="margin-top:12px;">
+      <div class="form-row">
+        <label>Naam van de maaltijd</label>
+        <input class="form-input" id="mb-name" placeholder="Bijv. Spaghetti bolognese" type="text">
+      </div>
+    </div>
+
+    <!-- Live macro preview -->
+    <div style="margin:12px 16px;background:var(--bg3);border-radius:var(--radius);padding:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11px;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;">Totaal</span>
+        <span style="font-size:11px;color:var(--text3);" id="mb-total-weight">0g</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;">
+        <div style="text-align:center;flex:1;">
+          <div style="font-size:18px;font-weight:700;color:var(--accent2);" id="mb-total-kcal">0</div>
+          <div style="font-size:10px;color:var(--text3);">KCAL</div>
+        </div>
+        <div style="text-align:center;flex:1;">
+          <div style="font-size:14px;font-weight:600;color:var(--protein-color);" id="mb-total-e">0g</div>
+          <div style="font-size:10px;color:var(--text3);">EIWIT</div>
+        </div>
+        <div style="text-align:center;flex:1;">
+          <div style="font-size:14px;font-weight:600;color:var(--carb-color);" id="mb-total-k">0g</div>
+          <div style="font-size:10px;color:var(--text3);">KH</div>
+        </div>
+        <div style="text-align:center;flex:1;">
+          <div style="font-size:14px;font-weight:600;color:var(--fat-color);" id="mb-total-v">0g</div>
+          <div style="font-size:10px;color:var(--text3);">VET</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ingredients list -->
+    <div style="font-size:11px;color:var(--text3);padding:4px 16px 6px;text-transform:uppercase;letter-spacing:.6px;font-weight:600;">Ingrediënten</div>
+    <div id="mb-components"></div>
+
+    <button onclick="openMealBuilderAddIngredient()" style="width:calc(100% - 32px);margin:8px 16px;padding:13px;background:var(--card);border:1.5px dashed var(--border);border-radius:var(--radius);color:var(--accent2);font-size:14px;font-weight:600;cursor:pointer;">+ Ingrediënt toevoegen</button>
+
+    <button class="btn-primary" onclick="saveMealBuilder()" style="margin-top:8px;">Maaltijd opslaan in database</button>
   </div>
 </div>
 
@@ -822,6 +894,39 @@
     </div>
     <div class="qty-preview" id="qty-preview"></div>
     <button class="btn-primary" onclick="confirmQtyAdd()" style="margin:0; width:100%;">Toevoegen</button>
+  </div>
+</div>
+
+<!-- ========== INFO MODAL (mealprep / samengestelde maaltijd details) ========== -->
+<div class="modal-overlay" id="info-modal" style="display:none" onclick="closeInfoModal(event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="info-modal-title">Samenstelling</div>
+    <div class="modal-food-name" id="info-modal-subtitle" style="margin-bottom:14px;"></div>
+
+    <div style="display:flex;justify-content:space-between;padding:10px 14px;background:var(--bg3);border-radius:var(--radius-sm);margin-bottom:14px;">
+      <div style="text-align:center;flex:1;">
+        <div style="font-size:15px;font-weight:700;color:var(--accent2);" id="info-modal-kcal">0</div>
+        <div style="font-size:10px;color:var(--text3);letter-spacing:0.05em;">KCAL</div>
+      </div>
+      <div style="text-align:center;flex:1;">
+        <div style="font-size:14px;font-weight:600;color:var(--protein-color);" id="info-modal-e">0g</div>
+        <div style="font-size:10px;color:var(--text3);letter-spacing:0.05em;">EIWIT</div>
+      </div>
+      <div style="text-align:center;flex:1;">
+        <div style="font-size:14px;font-weight:600;color:var(--carb-color);" id="info-modal-k">0g</div>
+        <div style="font-size:10px;color:var(--text3);letter-spacing:0.05em;">KH</div>
+      </div>
+      <div style="text-align:center;flex:1;">
+        <div style="font-size:14px;font-weight:600;color:var(--fat-color);" id="info-modal-v">0g</div>
+        <div style="font-size:10px;color:var(--text3);letter-spacing:0.05em;">VET</div>
+      </div>
+    </div>
+
+    <div style="font-size:11px;color:var(--text3);letter-spacing:0.08em;margin-bottom:8px;text-transform:uppercase;">Ingrediënten</div>
+    <div class="components-list" id="info-modal-components"></div>
+
+    <button onclick="closeInfoModal()" style="width:100%;padding:14px;margin-top:18px;background:var(--bg3);border:none;border-radius:var(--radius);color:var(--text);font-size:14px;font-weight:600;cursor:pointer;">Sluiten</button>
   </div>
 </div>
 
@@ -908,6 +1013,218 @@ function calcFoodMacros(food) {
     k:    r1d( (food.k||0)    * f),
     v:    r1d( (food.v||0)    * f),
   };
+}
+
+// Format quantity display: voor isPiece items toon aantal stuks, anders gram
+function formatQty(food) {
+  if (food.isPiece && food.pieceGrams) {
+    const pieces = (food.qty || 0) / food.pieceGrams;
+    // Toon hele getallen netjes (3 ipv 3.0), anders 1 decimaal
+    const piecesStr = (pieces % 1 === 0) ? pieces.toString() : pieces.toFixed(1);
+    const label = pieces === 1 ? 'stuk' : 'stuks';
+    return `${piecesStr} ${label} · ${food.qty}g`;
+  }
+  return `${food.qty}g`;
+}
+
+// ====== INFO MODAL (samenstelling van mealprep / samengestelde maaltijd) ======
+function openInfoModal(mi, fi, source) {
+  // Vind het food-object
+  let food = null;
+  if (source === 'day') {
+    food = weekData[currentWeekKey]?.days[currentDayIdx]?.meals[mi]?.foods[fi];
+  } else if (source === 'default') {
+    food = defaultWeek[defaultDayIdx]?.meals[mi]?.foods[fi];
+  }
+  if (!food || !food.components) return;
+
+  // Scaling factor: als jij niet 1 portie eet maar bv. 0.5, dan moeten subingredient hoeveelheden ook geschaald
+  const portionBase = (food.isPiece && food.pieceGrams) ? food.pieceGrams : 100;
+  const scaling = (food.qty || 0) / portionBase;
+
+  // Header info
+  document.getElementById('info-modal-title').textContent = food.name;
+  document.getElementById('info-modal-subtitle').textContent = formatQty(food);
+
+  const totalMacros = calcFoodMacros(food);
+  document.getElementById('info-modal-kcal').textContent = totalMacros.kcal;
+  document.getElementById('info-modal-e').textContent = totalMacros.e + 'g';
+  document.getElementById('info-modal-k').textContent = totalMacros.k + 'g';
+  document.getElementById('info-modal-v').textContent = totalMacros.v + 'g';
+
+  // Components list
+  let html = '';
+  food.components.forEach(comp => {
+    const item = currentFoodDb.find(x => x.name === comp.name);
+    const scaledQty = comp.qty * scaling;
+    let qtyDisplay;
+    let kcal = 0;
+    if (item) {
+      const base = (item.isPiece && item.pieceGrams) ? item.pieceGrams : 100;
+      const factor = scaledQty / base;
+      kcal = ri((item.kcal || 0) * factor);
+      // Format: voor isPiece toon stuks
+      if (item.isPiece && item.pieceGrams) {
+        const pieces = scaledQty / item.pieceGrams;
+        const piecesStr = (pieces % 1 === 0) ? pieces.toString() : pieces.toFixed(1);
+        const label = pieces === 1 ? 'stuk' : 'stuks';
+        qtyDisplay = `${piecesStr} ${label} · ${Math.round(scaledQty)}g`;
+      } else {
+        qtyDisplay = `${Math.round(scaledQty)}g`;
+      }
+    } else {
+      qtyDisplay = `${Math.round(scaledQty)}g`;
+    }
+    html += `<div class="components-row">
+      <div class="components-row-left">
+        <div class="components-row-name">${comp.name}</div>
+        <div class="components-row-qty">${qtyDisplay}</div>
+      </div>
+      <div class="components-row-kcal">${kcal} kcal</div>
+    </div>`;
+  });
+
+  document.getElementById('info-modal-components').innerHTML = html;
+  document.getElementById('info-modal').style.display = 'flex';
+}
+
+function closeInfoModal(e) {
+  if (!e || e.target.id === 'info-modal') {
+    document.getElementById('info-modal').style.display = 'none';
+  }
+}
+
+// ====== MEAL BUILDER (eigen maaltijd samenstellen) ======
+let mealBuilderState = { name: '', components: [] };
+
+function openMealBuilder() {
+  closeSettingsSheet();
+  // Reset state
+  mealBuilderState = { name: '', components: [] };
+  document.getElementById('mb-name').value = '';
+  showScreen('screen-meal-builder');
+  renderMealBuilder();
+}
+
+function closeMealBuilder() {
+  showScreen('screen-home');
+}
+
+function renderMealBuilder() {
+  // Herstel de naam (kan verloren gaan door re-render)
+  if (mealBuilderState.name) {
+    document.getElementById('mb-name').value = mealBuilderState.name;
+  }
+  // Tot. macros
+  let tot = { kcal:0, e:0, k:0, v:0, weight:0 };
+  let html = '';
+
+  if (mealBuilderState.components.length === 0) {
+    html = `<div style="padding:14px 16px;font-size:13px;color:var(--text3);text-align:center;">Nog geen ingrediënten toegevoegd</div>`;
+  } else {
+    mealBuilderState.components.forEach((comp, i) => {
+      const item = currentFoodDb.find(x => x.name === comp.name);
+      let kcal = 0, e = 0, k = 0, v = 0, qtyDisplay = `${Math.round(comp.qty)}g`;
+      if (item) {
+        const base = (item.isPiece && item.pieceGrams) ? item.pieceGrams : 100;
+        const factor = comp.qty / base;
+        kcal = ri((item.kcal || 0) * factor);
+        e = (item.e || 0) * factor;
+        k = (item.k || 0) * factor;
+        v = (item.v || 0) * factor;
+        tot.kcal += kcal;
+        tot.e += e;
+        tot.k += k;
+        tot.v += v;
+        tot.weight += comp.qty;
+        if (item.isPiece && item.pieceGrams) {
+          const pieces = comp.qty / item.pieceGrams;
+          const piecesStr = (pieces % 1 === 0) ? pieces.toString() : pieces.toFixed(1);
+          const label = pieces === 1 ? 'stuk' : 'stuks';
+          qtyDisplay = `${piecesStr} ${label} · ${Math.round(comp.qty)}g`;
+        }
+      }
+      html += `<div class="food-item" style="margin:0 16px 6px;background:var(--card);border-radius:var(--radius);">
+        <div class="food-item-info">
+          <div class="food-item-name">${comp.name}</div>
+          <div class="food-item-detail">${qtyDisplay} · E:${r1d(e)}g K:${r1d(k)}g V:${r1d(v)}g</div>
+        </div>
+        <span class="food-item-kcal">${kcal}</span>
+        <button class="food-item-delete" onclick="removeMealBuilderComponent(${i})">✕</button>
+      </div>`;
+    });
+  }
+
+  document.getElementById('mb-components').innerHTML = html;
+  document.getElementById('mb-total-kcal').textContent = ri(tot.kcal);
+  document.getElementById('mb-total-e').textContent = r1d(tot.e) + 'g';
+  document.getElementById('mb-total-k').textContent = r1d(tot.k) + 'g';
+  document.getElementById('mb-total-v').textContent = r1d(tot.v) + 'g';
+  document.getElementById('mb-total-weight').textContent = Math.round(tot.weight) + 'g totaal';
+}
+
+function removeMealBuilderComponent(idx) {
+  mealBuilderState.components.splice(idx, 1);
+  renderMealBuilder();
+}
+
+function openMealBuilderAddIngredient() {
+  // Sla de huidige naam op zodat hij niet verloren gaat
+  mealBuilderState.name = document.getElementById('mb-name').value;
+  foodListContext = 'mealbuilder';
+  showScreen('screen-food');
+  // Reset zoekveld
+  const searchEl = document.getElementById('food-search-input');
+  if (searchEl) { searchEl.value = ''; filterFoodList(); }
+}
+
+function saveMealBuilder() {
+  const name = document.getElementById('mb-name').value.trim();
+  if (!name) { showToast("Geef de maaltijd een naam"); return; }
+  if (mealBuilderState.components.length === 0) { showToast("Voeg eerst ingrediënten toe"); return; }
+
+  // Check of er al een item is met die naam — vraag bevestiging
+  const existingIdx = currentFoodDb.findIndex(x => x.name === name);
+  if (existingIdx >= 0) {
+    if (!confirm(`"${name}" bestaat al in de database. Overschrijven?`)) return;
+  }
+
+  // Bereken totalen
+  let tot = { kcal:0, e:0, k:0, v:0, weight:0 };
+  mealBuilderState.components.forEach(comp => {
+    const item = currentFoodDb.find(x => x.name === comp.name);
+    if (!item) return;
+    const base = (item.isPiece && item.pieceGrams) ? item.pieceGrams : 100;
+    const factor = comp.qty / base;
+    tot.kcal += (item.kcal || 0) * factor;
+    tot.e += (item.e || 0) * factor;
+    tot.k += (item.k || 0) * factor;
+    tot.v += (item.v || 0) * factor;
+    tot.weight += comp.qty;
+  });
+
+  const totalWeight = Math.round(tot.weight);
+  const newItem = {
+    name: name,
+    kcal: ri(tot.kcal),
+    e: r1d(tot.e),
+    k: r1d(tot.k),
+    v: r1d(tot.v),
+    isPiece: true,
+    pieceGrams: totalWeight,
+    components: mealBuilderState.components.map(c => ({...c}))  // clone
+  };
+
+  if (existingIdx >= 0) {
+    currentFoodDb[existingIdx] = newItem;
+  } else {
+    currentFoodDb.unshift(newItem);  // bovenaan zodat hij snel vindbaar is
+  }
+
+  saveAll();
+  showToast(`"${name}" opgeslagen (${newItem.kcal} kcal)`);
+  mealBuilderState = { name: '', components: [] };
+  showScreen('screen-home');
 }
 
 function calcDayTotals(dayIdx) {
@@ -1076,13 +1393,15 @@ function renderDayContent() {
     } else {
       meal.foods.forEach((food, fi) => {
         const fm = calcFoodMacros(food);
+        const hasComponents = food.components && food.components.length > 0;
         html += `<div class="food-item">
           <div class="food-item-check ${food.checked?'checked':''}" onclick="toggleFood(${mi},${fi})"></div>
           <div class="food-item-info">
             <div class="food-item-name">${food.name}</div>
-            <div class="food-item-detail">${food.qty}g · E:${fm.e}g K:${fm.k}g V:${fm.v}g</div>
+            <div class="food-item-detail">${formatQty(food)} · E:${fm.e}g K:${fm.k}g V:${fm.v}g</div>
           </div>
           <span class="food-item-kcal">${fm.kcal}</span>
+          ${hasComponents ? `<button class="food-item-info-btn" onclick="openInfoModal(${mi},${fi},'day')" title="Samenstelling">i</button>` : ''}
           <button class="food-item-delete" onclick="deleteFood(${mi},${fi})">✕</button>
         </div>`;
       });
@@ -1303,6 +1622,12 @@ function confirmQtyAdd() {
     saveAll();
     document.getElementById('qty-modal').style.display = 'none';
     renderDefaultDayContent(defaultDayIdx);
+    showToast(`${selectedFood.name} toegevoegd`);
+  } else if (foodListContext === 'mealbuilder') {
+    mealBuilderState.components.push({ name: selectedFood.name, qty: totalGrams });
+    document.getElementById('qty-modal').style.display = 'none';
+    showScreen('screen-meal-builder');
+    renderMealBuilder();
     showToast(`${selectedFood.name} toegevoegd`);
   }
 }
@@ -1559,12 +1884,14 @@ function renderDefaultDayContent(idx) {
     } else {
       meal.foods.forEach((f,fi) => {
         const fm = calcFoodMacros(f);
+        const hasComponents = f.components && f.components.length > 0;
         html += `<div class="food-item">
           <div class="food-item-info">
             <div class="food-item-name">${f.name}</div>
-            <div class="food-item-detail">${f.qty}g · E:${fm.e}g K:${fm.k}g V:${fm.v}g</div>
+            <div class="food-item-detail">${formatQty(f)} · E:${fm.e}g K:${fm.k}g V:${fm.v}g</div>
           </div>
           <span class="food-item-kcal">${fm.kcal}</span>
+          ${hasComponents ? `<button class="food-item-info-btn" onclick="openInfoModal(${mi},${fi},'default')" title="Samenstelling">i</button>` : ''}
           <button class="food-item-delete" onclick="deleteDefaultFood(${idx},${mi},${fi})">✕</button>
         </div>`;
       });
@@ -1801,7 +2128,7 @@ function showScreen(id) {
   if (id === 'screen-profile') loadProfile();
   if (id === 'screen-archive') renderArchive();
   if (id === 'screen-default') { renderDefaultTabs(); renderDefaultDayContent(defaultDayIdx); }
-  if (id === 'screen-food') { document.getElementById('food-back-btn').onclick = () => { if(foodListContext==='default'){showScreen('screen-default');}else{showScreen('screen-day');} }; }
+  if (id === 'screen-food') { document.getElementById('food-back-btn').onclick = () => { if(foodListContext==='default'){showScreen('screen-default');}else if(foodListContext==='mealbuilder'){showScreen('screen-meal-builder');}else{showScreen('screen-day');} }; }
 }
 
 function showToast(msg) {
@@ -1953,16 +2280,85 @@ function seedFoodDb() {
     {name:'Bouillon (gemaakt)', kcal:5, e:0.5, k:0.5, v:0.1},
 
     // ====== MEALPREPS (totaal per bakje = 1 stuk) ======
-    {name:'MP#1 Kip+Currysaus+Rijst', kcal:685, e:51, k:75, v:17, isPiece:true, pieceGrams:600},
-    {name:'MP#2 Kip+Spinaziepuree+Banaan', kcal:675, e:57, k:63, v:22, isPiece:true, pieceGrams:740},
-    {name:'MP#3 Kip+Aardappelpuree', kcal:678, e:50, k:76, v:15, isPiece:true, pieceGrams:570},
-    {name:'MP#4 Kip+Cottage+Rauwkost (vers)', kcal:675, e:55, k:68, v:18, isPiece:true, pieceGrams:680},
-    {name:'MP#5 Kip+Zoete Aardappel Oven', kcal:685, e:50, k:76, v:16, isPiece:true, pieceGrams:570},
-    {name:'MP#6 Kip Mediterraan+Couscous+Feta', kcal:690, e:52, k:74, v:18, isPiece:true, pieceGrams:570},
-    {name:'MP#7 Kip Aziatisch+Quinoa', kcal:680, e:53, k:72, v:17, isPiece:true, pieceGrams:580},
-    {name:'MP#8 Kip+Zilvervliesrijst+Tomatensaus', kcal:680, e:51, k:76, v:16, isPiece:true, pieceGrams:670},
-    {name:'MP#9 Kip+Aardappelblokjes Oven+Asperges', kcal:678, e:50, k:75, v:16, isPiece:true, pieceGrams:570},
-    {name:'MP#10 Kip+Bulgur+Yoghurtsaus', kcal:682, e:52, k:74, v:17, isPiece:true, pieceGrams:570},
+    {name:'MP#1 Kip+Currysaus+Rijst', kcal:685, e:51, k:75, v:17, isPiece:true, pieceGrams:600, components:[
+      {name:'Fuel Your Body kipblokjes', qty:150},
+      {name:'Basmati rijst (rauw)', qty:90},
+      {name:'Manna Currysaus', qty:30},
+      {name:'Brocolli', qty:120},
+      {name:'Paprika (rauw)', qty:100},
+    ]},
+    {name:'MP#2 Kip+Spinaziepuree+Banaan', kcal:675, e:57, k:63, v:22, isPiece:true, pieceGrams:740, components:[
+      {name:'Fuel Your Body kipblokjes', qty:180},
+      {name:'Boni Spinaziepuree', qty:300},
+      {name:'Paprika (rauw)', qty:75},
+      {name:'Courgette (rauw)', qty:75},
+      {name:'Banaan', qty:110},
+    ]},
+    {name:'MP#3 Kip+Aardappelpuree', kcal:678, e:50, k:76, v:15, isPiece:true, pieceGrams:570, components:[
+      {name:'Fuel Your Body kipblokjes', qty:150},
+      {name:'Aardappelpuree Boni (bereid)', qty:250},
+      {name:'Brocolli', qty:80},
+      {name:'Worteltjes (rauw)', qty:70},
+      {name:'Banaan', qty:110},
+      {name:'Olijfolie', qty:5},
+    ]},
+    {name:'MP#4 Kip+Cottage+Rauwkost (vers)', kcal:675, e:55, k:68, v:18, isPiece:true, pieceGrams:680, components:[
+      {name:'Fuel Your Body kipblokjes', qty:150},
+      {name:'Cottage cheese (mager)', qty:250},
+      {name:'Paprika (rauw)', qty:100},
+      {name:'Komkommer', qty:100},
+      {name:'Cherrytomaatjes', qty:100},
+      {name:'Worteltjes (rauw)', qty:50},
+      {name:'Rijstwafel (puur)', qty:21},
+      {name:'Olijfolie', qty:5},
+    ]},
+    {name:'MP#5 Kip+Zoete Aardappel Oven', kcal:685, e:50, k:76, v:16, isPiece:true, pieceGrams:570, components:[
+      {name:'Fuel Your Body kipblokjes', qty:150},
+      {name:'Zoete aardappel', qty:320},
+      {name:'Courgette (rauw)', qty:70},
+      {name:'Paprika (rauw)', qty:70},
+      {name:'Champignons (rauw)', qty:60},
+      {name:'Olijfolie', qty:5},
+    ]},
+    {name:'MP#6 Kip Mediterraan+Couscous+Feta', kcal:690, e:52, k:74, v:18, isPiece:true, pieceGrams:570, components:[
+      {name:'Fuel Your Body kipblokjes', qty:150},
+      {name:'Couscous (rauw)', qty:90},
+      {name:'Cherrytomaatjes', qty:100},
+      {name:'Courgette (rauw)', qty:100},
+      {name:'Paprika (rauw)', qty:80},
+      {name:'Feta (light)', qty:20},
+      {name:'Olijfolie', qty:3},
+    ]},
+    {name:'MP#7 Kip Aziatisch+Quinoa', kcal:680, e:53, k:72, v:17, isPiece:true, pieceGrams:580, components:[
+      {name:'Fuel Your Body kipblokjes', qty:160},
+      {name:'Quinoa (rauw)', qty:90},
+      {name:'Champignons (rauw)', qty:150},
+      {name:'Spinazie (rauw)', qty:100},
+      {name:'Sojasaus (laag zout)', qty:15},
+      {name:'Sesamzaadjes', qty:5},
+    ]},
+    {name:'MP#8 Kip+Zilvervliesrijst+Tomatensaus', kcal:680, e:51, k:76, v:16, isPiece:true, pieceGrams:670, components:[
+      {name:'Fuel Your Body kipblokjes', qty:150},
+      {name:'Zilvervliesrijst (rauw)', qty:90},
+      {name:'Passata / gezeefde tomaten', qty:120},
+      {name:'Courgette (rauw)', qty:150},
+    ]},
+    {name:'MP#9 Kip+Aardappelblokjes Oven+Asperges', kcal:678, e:50, k:75, v:16, isPiece:true, pieceGrams:570, components:[
+      {name:'Fuel Your Body kipblokjes', qty:150},
+      {name:'Aardappelen (gekookt)', qty:320},
+      {name:'Groene asperges (rauw)', qty:150},
+      {name:'Paprika (rauw)', qty:80},
+      {name:'Dijon mosterd', qty:5},
+      {name:'Olijfolie', qty:5},
+    ]},
+    {name:'MP#10 Kip+Bulgur+Yoghurtsaus', kcal:682, e:52, k:74, v:17, isPiece:true, pieceGrams:570, components:[
+      {name:'Fuel Your Body kipblokjes', qty:150},
+      {name:'Bulgur (rauw)', qty:80},
+      {name:'Cherrytomaatjes', qty:100},
+      {name:'Komkommer', qty:80},
+      {name:'Griekse yoghurt (0%)', qty:100},
+      {name:'Olijfolie', qty:3},
+    ]},
   ];
   saveAll();
 }
